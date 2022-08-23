@@ -1,4 +1,6 @@
 Rails.application.routes.draw do
+  resources :databases
+  resources :pages
   #users
   namespace :api do
     namespace :v1 do
