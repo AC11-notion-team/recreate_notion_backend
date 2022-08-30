@@ -1,10 +1,11 @@
 class Api::V1::PagesController < ApplicationController
+  before_action :authenticate_request
   
   def index 
     @pages = Page.all
   end
   def create
-    @page = Page.new
+    @page = @current_user.pages.create(page_params)
     if @page.save
       render json:{id: @page.id}
     else
@@ -21,19 +22,18 @@ class Api::V1::PagesController < ApplicationController
     end
   end
   def show
+    p "-"*100
+    p params
+    p "-"*100
     @page = Page.find(params[:id])
+    p @page
+    p "-"*100
     @blocks = @page.blocks
-    render :json
   end
-
-
-
-
-
 
   private 
   def page_params
-    params.require(:page).permit(:icon , :cover, :url)
+    params.permit(:icon , :cover, :url)
   end
 
 end

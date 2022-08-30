@@ -12,6 +12,7 @@ class Api::V1::UsersController < ApplicationController
     @user = User.create(user_params)
     if @user.save
       render json: @user, status: :created
+      redirect_to 
     else
       render json: { errors: @user.errors.full_message},
              status: :unprocessable_entity
