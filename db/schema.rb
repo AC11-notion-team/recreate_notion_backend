@@ -10,54 +10,21 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2022_08_23_115021) do
+ActiveRecord::Schema.define(version: 2022_08_28_220317) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
 
-  create_table "blocks", force: :cascade do |t|
-    t.string "object"
-    t.uuid "uuid"
-    t.json "parent"
-    t.string "type"
-    t.json "created_by"
-    t.json "last_edited_by"
-    t.boolean "archived"
-    t.boolean "has_children"
-    t.json "type_specific_info"
-    t.datetime "created_at", precision: 6, null: false
-    t.datetime "updated_at", precision: 6, null: false
+  create_table "jwt_denylist", force: :cascade do |t|
+    t.string "jti", null: false
+    t.datetime "exp", null: false
+    t.index ["jti"], name: "index_jwt_denylist_on_jti"
   end
 
-  create_table "databases", force: :cascade do |t|
-    t.string "object"
-    t.uuid "uuid"
-    t.json "created_by"
-    t.json "last_edited_by"
-    t.json "title"
-    t.text "description"
-    t.json "properties"
-    t.json "icon"
-    t.json "cover"
-    t.json "parent"
-    t.string "url"
-    t.boolean "archived"
-    t.boolean "is_inline"
-    t.datetime "created_at", precision: 6, null: false
-    t.datetime "updated_at", precision: 6, null: false
-  end
-
-  create_table "pages", force: :cascade do |t|
-    t.string "object"
-    t.uuid "uuid"
-    t.json "created_by"
-    t.json "last_edited_by"
-    t.boolean "archived"
-    t.json "icon"
-    t.json "cover"
-    t.json "properties"
-    t.json "parent"
-    t.string "url"
+  create_table "users", force: :cascade do |t|
+    t.string "username"
+    t.string "email"
+    t.string "password_digest"
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
   end

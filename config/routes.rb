@@ -1,11 +1,9 @@
 Rails.application.routes.draw do
-  resources :blocks
-  resources :databases
-  resources :pages
   #users
   namespace :api do
     namespace :v1 do
       resources :users, only: [:create, :show, :update, :destroy]
+      post '/auth/login', to: 'authentication#login'
     end
   end
   
