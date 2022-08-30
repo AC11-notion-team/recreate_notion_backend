@@ -1,2 +1,0 @@
-class CreateBy < ApplicationRecord
-end

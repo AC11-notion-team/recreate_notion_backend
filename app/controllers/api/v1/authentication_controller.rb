@@ -5,7 +5,7 @@ class Api::V1::AuthenticationController < ApplicationController
       token = jwt_encode(user_id: @user.id)
       create_token
     else
-      @user = User.new(username: params[:authentication][:name] ,email:params[:authentication][:email] ,password:params[:authentication][:email])  
+      @user = User.new(username: params[:authentication][:name] ,email:params[:authentication][:email] )  
       @user.save
       create_token
     end
