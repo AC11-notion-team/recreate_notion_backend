@@ -1,0 +1,2 @@
+class EditBy < ApplicationRecord
+end
