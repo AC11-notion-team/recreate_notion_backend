@@ -27,13 +27,10 @@ ActiveRecord::Schema.define(version: 2022_08_30_080349) do
     t.index ["user_id"], name: "index_blocks_on_user_id"
   end
 
-  create_table "edit_bies", force: :cascade do |t|
-    t.uuid "pages_id"
-    t.bigint "users_id"
-    t.datetime "created_at", precision: 6, null: false
-    t.datetime "updated_at", precision: 6, null: false
-    t.index ["pages_id"], name: "index_edit_bies_on_pages_id"
-    t.index ["users_id"], name: "index_edit_bies_on_users_id"
+  create_table "jwt_denylist", force: :cascade do |t|
+    t.string "jti", null: false
+    t.datetime "exp", null: false
+    t.index ["jti"], name: "index_jwt_denylist_on_jti"
   end
 
   create_table "pages", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|

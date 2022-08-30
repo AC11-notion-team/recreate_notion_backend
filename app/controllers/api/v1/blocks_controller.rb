@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 class Api::V1::BlocksController < ApplicationController
   def index
   end
@@ -17,3 +18,7 @@ class Api::V1::BlocksController < ApplicationController
   end
 
 end
+=======
+class Api::V1::BlocksController < ApplicationController
+end
+>>>>>>> origin/feature/user_block_page
