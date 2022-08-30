@@ -1,0 +1,2 @@
+class CreateBy < ApplicationRecord
+end

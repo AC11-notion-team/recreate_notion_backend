@@ -10,11 +10,40 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2022_08_30_030000) do
+ActiveRecord::Schema.define(version: 2022_08_30_063353) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "pgcrypto"
   enable_extension "plpgsql"
+
+  create_table "blocks", force: :cascade do |t|
+    t.uuid "page_id"
+    t.bigint "user_id"
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
+    t.string "type"
+    t.json "data"
+    t.index ["page_id"], name: "index_blocks_on_page_id"
+    t.index ["user_id"], name: "index_blocks_on_user_id"
+  end
+
+  create_table "edit_bies", force: :cascade do |t|
+    t.uuid "pages_id"
+    t.bigint "users_id"
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
+    t.index ["pages_id"], name: "index_edit_bies_on_pages_id"
+    t.index ["users_id"], name: "index_edit_bies_on_users_id"
+  end
+
+  create_table "pages", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
+    t.string "icon"
+    t.string "cover"
+    t.string "url"
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
+    t.integer "user_id"
+  end
 
   create_table "users", force: :cascade do |t|
     t.string "username"
