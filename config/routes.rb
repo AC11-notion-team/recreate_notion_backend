@@ -4,7 +4,6 @@ Rails.application.routes.draw do
     namespace :v1 do
       resources :users, only: [:create, :show, :update, :destroy]
       get "/fetch", to: "endpoints#fetchUrl"
-      post "/uploadImage", to: "endpoints#uploadImage"
       post "/uploadImageByUrl", to: "endpoints#uploadImageByUrl"
     end
   end

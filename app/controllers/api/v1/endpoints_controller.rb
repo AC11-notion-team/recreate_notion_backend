@@ -7,19 +7,13 @@ class Api::V1::EndpointsController < ApplicationController
         
         render json: {
             "success": 1,
-            "meta":{
+            "meta": {
                 "title": og.title || null,
                 "description": og.description || null,
                 "image": {
-                    "url": og.images[0] || null,
+                    "url": og.images.first || null,
                 }
             }
-        }
-    end
-
-    def uploadImage
-        render json:{
-            "text": "hi"
         }
     end
 
