@@ -41,6 +41,4 @@ gem 'tzinfo-data', platforms: [:mingw, :mswin, :x64_mingw, :jruby]
 gem 'net-smtp', require: false
 
 # fetch utilities
-gem 'rest-client'
-# gem 'http'
 gem "opengraph_parser"
