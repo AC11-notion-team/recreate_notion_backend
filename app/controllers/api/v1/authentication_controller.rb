@@ -14,7 +14,11 @@ class Api::V1::AuthenticationController < ApplicationController
       @user.save
       p User.last
       p "-" *100
-      create_token
+      if @user.save
+        create_token
+      else
+        render json:{message:"wrong key"}
+      end
     end
   end 
 
