@@ -11,6 +11,7 @@ class Api::V1::UsersController < ApplicationController
   def create
     @user = User.create(user_params)
     if @user.save
+      
       render json: @user, status: :created
     else
       render json: { errors: @user.errors.full_message},
@@ -36,7 +37,7 @@ class Api::V1::UsersController < ApplicationController
 
   private
   def user_params
-    params.permit(:name, :username, :email, :password)
+    params.permit(:username, :email, :password_digest)
   end
 
   def find_user

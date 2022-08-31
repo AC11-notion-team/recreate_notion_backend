@@ -1,11 +1,12 @@
 class Api::V1::AuthenticationController < ApplicationController
   skip_before_action :authenticate_request
+  # 第三方支付
   def login
     if @user = User.find_by_email(params[:email])
       token = jwt_encode(user_id: @user.id)
       create_token
     else
-      @user = User.new(username: params[:authentication][:name] ,email:params[:authentication][:email] )  
+      @user = User.new(username: params[:authentication][:name] ,email:params[:authentication][:email] ,password:params[:authentication][:email])  
       @user.save
       create_token
     end
