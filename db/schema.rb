@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2022_08_31_074826) do
+ActiveRecord::Schema.define(version: 2022_09_01_064150) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "pgcrypto"
@@ -24,6 +24,9 @@ ActiveRecord::Schema.define(version: 2022_08_31_074826) do
     t.string "kind"
     t.json "data"
     t.string "editorID"
+    t.integer "index_number"
+    t.string "prev_editorID"
+    t.index ["editorID"], name: "index_blocks_on_editorID"
     t.index ["page_id"], name: "index_blocks_on_page_id"
     t.index ["user_id"], name: "index_blocks_on_user_id"
   end
@@ -35,6 +38,8 @@ ActiveRecord::Schema.define(version: 2022_08_31_074826) do
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
     t.integer "user_id"
+    t.string "title"
+    t.string "tail"
   end
 
   create_table "users", force: :cascade do |t|

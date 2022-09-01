@@ -22,46 +22,60 @@ class Api::V1::PagesController < ApplicationController
       render json:{message:"page #{@page.id} couldn't update"} , status:404
     end
   end
+
   def show
-    p "-"*100
-    p params
-    p "-"*100
     @page = Page.find(params[:id])
-    p @page
-    p "-"*100
-    @blocks = @page.blocks
+    @blocks=Page.print_all_blocks(@page[:tail])
+    
   end
+
   def save_data
-    @page = Page.find_by(id: params[:page_id])
-    @page.update(page_params)
+    # 先找到那一頁
+    @page = Page.find_by(:id => params[:page_id])
+    #對那一頁的基本資料進行更新
+    @page.update(
+      "title": params[:title],
+      "icon": params[:icon],
+      "cover": params[:cover]
+    )
     block_data = params[:api][:blocks]
-    if block_data.length  == 1
-      @block = @page.blocks.new(
-        "editorID": block_data[0][:id],
-        "kind": block_data[0][:type],
-        "data": block_data[0][:data]
-      )
-      p @block.save
-    else
-      block_data.map do |block|
-        p block
+    prev_editorID = nil
+    block_data.map.with_index do |block,index|
+      @find_block = Block.where(:editorID=>block[:id])
+      if @find_block.empty?
+        # debugger
         @block = @page.blocks.new(
           "editorID": block[:id],
           "kind": block[:type],
-          "data": block[:data]
+          "data": block[:data],
+          "prev_editorID": prev_editorID 
         )
-        p @block.save
+        prev_editorID = block[:id]
+        @block.save
+        p "<"*50
+        p "#{block[:id]} save"
+        p ">" *50
+      else
+        @find_block.update(
+          "editorID": block[:id],
+          "kind": block[:type],
+          "data": block[:data],
+          "prev_editorID": prev_editorID 
+        )
+        prev_editorID = block[:id]
+        p "<"*50
+        p "#{block[:id]} update"
+        p ">" *50
       end
     end
+    @page.update(
+      "tail": prev_editorID
+    )
   end
 
   private 
   def page_params
     params.permit(:icon , :cover, :url)
   end
-  def block_params(block_data)
-    block_data.params.permit(:id,:type,:data)
-  end
-
 end
 
