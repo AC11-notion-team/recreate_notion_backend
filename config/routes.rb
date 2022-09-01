@@ -9,6 +9,8 @@ Rails.application.routes.draw do
         post "save_data"
         resources :blocks, only: [:index]
       end
+      get "/fetch", to: "endpoints#fetchUrl"
+      post "/uploadImageByUrl", to: "endpoints#uploadImageByUrl"
     end
   end  
 end
