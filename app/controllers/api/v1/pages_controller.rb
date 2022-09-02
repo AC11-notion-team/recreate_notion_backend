@@ -39,37 +39,31 @@ class Api::V1::PagesController < ApplicationController
       "cover": params[:cover]
     )
     block_data = params[:api][:blocks]
-    prev_editorID = nil
+    prev_blockID = nil
     block_data.map.with_index do |block,index|
-      @find_block = Block.where(:editorID=>block[:id])
+      @find_block = Block.where(:blockID=>block[:id])
       if @find_block.empty?
         # debugger
         @block = @page.blocks.new(
-          "editorID": block[:id],
+          "blockID": block[:id],
           "kind": block[:type],
           "data": block[:data],
-          "prev_editorID": prev_editorID 
+          "prev_blockID": prev_blockID 
         )
-        prev_editorID = block[:id]
+        prev_blockID = block[:id]
         @block.save
-        p "<"*50
-        p "#{block[:id]} save"
-        p ">" *50
       else
         @find_block.update(
-          "editorID": block[:id],
+          "blockID": block[:id],
           "kind": block[:type],
           "data": block[:data],
-          "prev_editorID": prev_editorID 
+          "prev_blockID": prev_blockID 
         )
-        prev_editorID = block[:id]
-        p "<"*50
-        p "#{block[:id]} update"
-        p ">" *50
+        prev_blockID = block[:id]
       end
     end
     @page.update(
-      "tail": prev_editorID
+      "tail": prev_blockID
     )
   end
 
