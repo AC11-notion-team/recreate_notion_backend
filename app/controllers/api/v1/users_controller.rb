@@ -80,3 +80,4 @@ class Api::V1::UsersController < ApplicationController
     @user[:third_party] == true
   end
 end
+

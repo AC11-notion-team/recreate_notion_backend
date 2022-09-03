@@ -7,8 +7,11 @@ class Api::V1::AuthenticationController < ApplicationController
       create_token
     else
       create_third_party_user
-      @user.save
-      create_token
+      if @user.save
+        create_token
+      else
+        render json:{message:"wrong key"}
+      end
     end
   end 
   

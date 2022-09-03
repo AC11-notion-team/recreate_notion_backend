@@ -21,16 +21,14 @@ ActiveRecord::Schema.define(version: 2022_09_03_152108) do
     t.bigint "user_id"
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
-    t.string "type"
+    t.string "kind"
     t.json "data"
+    t.string "blockID"
+    t.integer "index_number"
+    t.string "prev_blockID"
+    t.index ["blockID"], name: "index_blocks_on_blockID"
     t.index ["page_id"], name: "index_blocks_on_page_id"
     t.index ["user_id"], name: "index_blocks_on_user_id"
-  end
-
-  create_table "jwt_denylist", force: :cascade do |t|
-    t.string "jti", null: false
-    t.datetime "exp", null: false
-    t.index ["jti"], name: "index_jwt_denylist_on_jti"
   end
 
   create_table "pages", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
@@ -40,6 +38,18 @@ ActiveRecord::Schema.define(version: 2022_09_03_152108) do
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
     t.integer "user_id"
+    t.string "title"
+    t.string "tail"
+  end
+
+  create_table "sharepages", force: :cascade do |t|
+    t.bigint "user_id"
+    t.bigint "page_id"
+    t.string "permission"
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
+    t.index ["page_id"], name: "index_sharepages_on_page_id"
+    t.index ["user_id"], name: "index_sharepages_on_user_id"
   end
 
   create_table "users", force: :cascade do |t|

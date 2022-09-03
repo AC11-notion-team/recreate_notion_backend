@@ -15,6 +15,9 @@ Rails.application.routes.draw do
       resources :pages, only: [:create, :index, :show, :update, :destroy] do
         resources :blocks, only: [:index]
       end
+
+      get "/fetch", to: "endpoints#fetchUrl"
+      post "/uploadImageByUrl", to: "endpoints#uploadImageByUrl"
     end
   end  
 end

@@ -1,3 +1,4 @@
+
 class User < ApplicationRecord
   before_create :confirmation_token
   
@@ -16,7 +17,6 @@ class User < ApplicationRecord
   def email_activate
     self.email_confirmed = true
     self.confirm_token = nil
-    save!(:validate => false)
   end
 
   private

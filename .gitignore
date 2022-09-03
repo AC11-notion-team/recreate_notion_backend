@@ -23,6 +23,9 @@
 !/storage/.keep
 .byebug_history
 
+# Ignore customized database setting
+/config/database.yml
+
 # Ignore master key for decrypting credentials and more.
 /config/master.key
 
