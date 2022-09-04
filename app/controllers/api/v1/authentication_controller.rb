@@ -3,7 +3,6 @@ class Api::V1::AuthenticationController < ApplicationController
   # 第三方log in
   def third_party_login
     if @user = User.find_by_email(params[:email])
-      token = jwt_encode(user_id: @user.id)
       create_token
     else
       create_third_party_user

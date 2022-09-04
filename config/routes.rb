@@ -5,7 +5,7 @@ Rails.application.routes.draw do
       resources :users, only: [:create, :show, :update, :destroy] do 
         collection do 
           get :email_present
-          get :login
+          post :login
           get :email_confirmed
         end
       end
