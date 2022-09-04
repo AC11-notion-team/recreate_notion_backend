@@ -15,13 +15,6 @@ class Api::V1::AuthenticationController < ApplicationController
   end 
   
   private
-  def create_token
-    token = jwt_encode(user_id: @user.id)
-    render json: {:message => "Ok",
-      :auth_token => token,
-      :user_id => @user.id }, status: :ok
-  end
-   
   def create_third_party_user
     @user = User.new(username: params[:authentication][:name] ,email: params[:authentication][:email] ,password: params[:authentication][:email], third_party: true)  
   end
