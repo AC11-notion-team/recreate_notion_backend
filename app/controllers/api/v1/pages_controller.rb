@@ -1,5 +1,5 @@
 class Api::V1::PagesController < ApplicationController
-  before_action :authenticate_request
+  # before_action :authenticate_request
   
   def index 
     @pages = Page.all
@@ -30,8 +30,10 @@ class Api::V1::PagesController < ApplicationController
   end
 
   def save_data
+    # debugger
     # 先找到那一頁
-    @page = Page.find_by(:id => params[:page_id])
+    @page = Page.find_by(:id => params[:id])
+    p params[:page_id]
     #對那一頁的基本資料進行更新
     @page.update(
       "title": params[:title],
@@ -72,4 +74,6 @@ class Api::V1::PagesController < ApplicationController
     params.permit(:icon , :cover, :url)
   end
 end
+
+
 
