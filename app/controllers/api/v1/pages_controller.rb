@@ -2,13 +2,16 @@ class Api::V1::PagesController < ApplicationController
   before_action :authenticate_request
   
   def index 
-    @pages = Page.all
-    render json:@pages
+    @pages = current_user.pages
   end
   def create
-    @page = @current_user.pages.create(page_params)
+    @page = @current_user.pages.create(
+      "icon": params[:icon],
+      "cover": params[:cover],
+    )
     if @page.save
-      render json:{id: @page.id}
+      @pages = @current_user.pages
+      render "api/v1/pages/create.json.jbuilder"
     else
       render json:{message:"cann't save the page"}
     end

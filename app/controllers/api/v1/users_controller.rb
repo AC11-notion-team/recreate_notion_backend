@@ -1,5 +1,6 @@
 class Api::V1::UsersController < ApplicationController
   skip_before_action :authenticate_request, only: [:create]
+  before_action :authenticate_request
   before_action :find_user, only: [:show, :destroy]  
   
   def index
@@ -14,19 +15,21 @@ class Api::V1::UsersController < ApplicationController
       render json: @user, status: :created
     else
       render json: { errors: @user.errors.full_message},
-             status: :unprocessable_entity
+            status: :unprocessable_entity
     end
   end
   
   def show
-    render json: @user, status: :ok
+    # debugger
+    @pages = @current_user.pages
+    # render "api/v1/pages/show.json.jbuilder"
   end
   
   
   def update
     unless @user.update(user_params)
       render json: {errors: @user.errors.full_message},
-             status: :unprocessable_entity
+            status: :unprocessable_entity
     end
   end
   
