@@ -17,7 +17,13 @@ require "rails/test_unit/railtie"
 
 # Require the gems listed in Gemfile, including any gems
 # you've limited to :test, :development, or :production.
+
 Bundler.require(*Rails.groups)
+
+# if ['development', 'test'].include? ENV['RAILS_ENV']
+#   Dotenv::Railtie.load
+# end
+
 
 module RecreateNotionBackend
   class Application < Rails::Application
