@@ -2,6 +2,9 @@ class Page < ApplicationRecord
   # 關聯
   has_many :blocks
   belongs_to :user
+  #關聯 - 多對多(user - sharepage(第三方) - page )
+  has_many :sharepages
+  has_many :users, through: :sharepages, source: :person
 
   #Linklist function
   def self.print_all_blocks(tail)
@@ -16,5 +19,5 @@ class Page < ApplicationRecord
     end
     blocks
   end
-  
+
 end

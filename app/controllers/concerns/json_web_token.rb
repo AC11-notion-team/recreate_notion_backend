@@ -6,7 +6,7 @@ module JsonWebToken
 
   def jwt_encode(payload, exp = 1.days.from_now)
     payload[:exp] =  exp.to_i
-    JWT.encode(payload, SECRET_KEY)    
+    JWT.encode(payload, SECRET_KEY)
   end
 
   def jwt_decode(token)
