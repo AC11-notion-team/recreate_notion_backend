@@ -2,13 +2,16 @@ class Api::V1::PagesController < ApplicationController
   # before_action :authenticate_request
   
   def index 
-    @pages = Page.all
-    render json:@pages
+    @pages = current_user.pages
   end
   def create
-    @page = @current_user.pages.create(page_params)
+    @page = @current_user.pages.create(
+      "icon": params[:icon],
+      "cover": params[:cover],
+    )
     if @page.save
-      render json:{id: @page.id}
+      @pages = @current_user.pages
+      render "api/v1/pages/create.json.jbuilder"
     else
       render json:{message:"cann't save the page"}
     end
@@ -26,7 +29,6 @@ class Api::V1::PagesController < ApplicationController
   def show
     @page = Page.find(params[:id])
     @blocks=Page.print_all_blocks(@page[:tail])
-    
   end
 
   def save_data
@@ -67,6 +69,20 @@ class Api::V1::PagesController < ApplicationController
     @page.update(
       "tail": prev_blockID
     )
+  end
+
+  def delete_data
+    @page = Page.find_by(:id => params[:page_id])
+    @block = Block.find_by(:blockID => params[:block_id], :page_id => params[:page_id])
+    @nextBlock = Block.find_by(:prev_blockID => params[:block_id], :page_id => params[:page_id])
+    if @page.tail == @block.blockID
+      @page.update("tail": @block.prev_blockID)
+    end
+    if @page.tail != @block.blockID
+      p "here"
+      @nextBlock.update("prev_blockID": @block.prev_blockID)
+    end
+    @block.destroy
   end
 
   private 

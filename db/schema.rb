@@ -38,7 +38,7 @@ ActiveRecord::Schema.define(version: 2022_09_03_152108) do
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
     t.integer "user_id"
-    t.string "title"
+    t.string "title", default: "Untitled"
     t.string "tail"
   end
 
