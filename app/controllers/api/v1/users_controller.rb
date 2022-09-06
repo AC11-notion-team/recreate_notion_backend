@@ -46,7 +46,8 @@ class Api::V1::UsersController < ApplicationController
   end
 
   def show
-    render json: @user, status: :ok
+    @pages = @current_user.pages
+    # render json: @user, status: :ok
   end
   
   def update

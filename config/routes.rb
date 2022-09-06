@@ -14,6 +14,9 @@ Rails.application.routes.draw do
       resources :blocks, only: [:index, :create, :show, :update, :destroy]  
       resources :pages, only: [:create, :index, :show, :update, :destroy] do
         resources :blocks, only: [:index]
+        member do 
+          post :sava_data
+        end
       end
 
       get "/fetch", to: "endpoints#fetchUrl"

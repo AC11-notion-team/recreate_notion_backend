@@ -1,4 +1,3 @@
-
 class User < ApplicationRecord
   before_create :confirmation_token
   
@@ -13,6 +12,9 @@ class User < ApplicationRecord
 
   #關聯
   has_many :pages
+  #關聯, 一個人可以參與很多page的編輯 - 多對多(user - sharepage(第三方) - page )
+  has_many :sharepages
+  has_many :linkpages, :through => :sharepages, :source => :page
 
   def email_activate
     self.email_confirmed = true
