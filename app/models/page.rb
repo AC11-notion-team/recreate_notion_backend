@@ -11,7 +11,7 @@ class Page < ApplicationRecord
     block = Block.find_by("blockID": tail)
     blocks = []
     
-    return blocks if block.nil?
+    return blocks if block == nil || block.nil?
 
     blocks.unshift(block)
     prev_blockID = block[:prev_blockID]

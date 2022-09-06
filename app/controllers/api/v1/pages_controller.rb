@@ -29,6 +29,7 @@ class Api::V1::PagesController < ApplicationController
   def show
     @page = Page.find(params[:id])
     @blocks=Page.print_all_blocks(@page[:tail])
+
   end
 
   def save_data
@@ -74,12 +75,11 @@ class Api::V1::PagesController < ApplicationController
   def delete_data
     @page = Page.find_by(:id => params[:page_id])
     @block = Block.find_by(:blockID => params[:block_id], :page_id => params[:page_id])
-    @nextBlock = Block.find_by(:prev_blockID => params[:block_id], :page_id => params[:page_id])
+    
     if @page.tail == @block.blockID
       @page.update("tail": @block.prev_blockID)
-    end
-    if @page.tail != @block.blockID
-      p "here"
+    else 
+      @nextBlock = Block.find_by(:prev_blockID => params[:block_id], :page_id => params[:page_id])
       @nextBlock.update("prev_blockID": @block.prev_blockID)
     end
     @block.destroy
