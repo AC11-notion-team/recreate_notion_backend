@@ -1,47 +1,66 @@
 class Api::V1::UsersController < ApplicationController
-  skip_before_action :authenticate_request, only: [:email_present, :create, :email_confirmed, :login ]
-  before_action :find_user, only: [:show, :destroy, :login, :email_present, :email_confirmed]  
-  
+  skip_before_action :authenticate_request, only: %i[email_present create email_confirmed login]
+  before_action :find_user, only: %i[show destroy login email_present email_confirmed]
+
   def index
-    @users = User.all          
+    @users = User.all
     render json: @users, status: :ok
   end
-  
+
   def email_present
-    if User.find_by_email(params[:email]).present?
+    # debugger
+    p '-' * 50
+    p params
+    p '-' * 50
+      user = User.find_by_email(params[:email])
+    if user.present?
       if is_third_party_sign_up?
-        render json: { :message => "user already exists, please press google account bottom"}  
-      else
-        render json: { :message => "user already exists, password, please!  => GET url: /api/v1/users/login"}
+        render json: { status: 'third', message: 'user already exists, please press google account bottom' }
+      elsif user.vertify_status==true
+      
+        render json: { status: 'login',
+                       message: 'user already exists, password, please!  => GET url: /api/v1/users/login' }
       end
     else
-      render json: { :message => "new user need create ! => POST url: /api/v1/users"}
+      render json: { status: 'register', message: 'new user need create ! => POST url: /api/v1/users' }
+
     end
   end
 
-
   def create
-      @user = User.create!(user_params)
-      UserMailer.registration_confirmation(@user).deliver_now
-      render json: { :message => "Please confirm your email address to continue => GET url:  /api/v1/users/email_confirmed" }
-  
+    @user = User.create!(user_params)
+    @user.update(
+      vertify_status: false
+    )
+    render json: { status: 'unvertify',
+                   message: 'Please confirm your email address to continue => GET url:  /api/v1/users/email_confirmed' }
+    # UserMailer.registration_confirmation(@user).deliver_now
   end
 
   def email_confirmed
     if params[:confirm_token] == @user[:confirm_token]
+      @user.update(
+        vertify_status: true
+      )
       @user.email_activate
-      render json: {:message => "Welcome to the Zettel! Your email has been confirmed. GET url: /api/v1/users/login",
-        :user_id => @user.id }
+      render json: { status: 'login', message: 'Welcome to the Zettel! Your email has been confirmed. GET url: /api/v1/users/login',
+                     user_id: @user.id }
+
     else
-      render json: {:message => "Sorry. User does not exist"} 
+      render json: { status: 'unvertify', message: 'Sorry. User does not exist' }
     end
   end
 
   def login
-    if @user.authenticate(params[:password])   
+    # debugger
+    p '<' * 55
+    p params
+    p '<' * 55
+    if @user.authenticate(params[:password])
       create_token
+
     else
-      render json: { :message => "wrong password! "}
+      render json: { status: 'login', message: 'wrong password! ' }
     end
   end
 
@@ -49,19 +68,20 @@ class Api::V1::UsersController < ApplicationController
     @pages = @current_user.pages
     # render json: @user, status: :ok
   end
-  
+
   def update
     unless @user.update(user_params)
-      render json: {errors: @user.errors.full_message},
+      render json: { errors: @user.errors.full_message },
              status: :unprocessable_entity
     end
   end
-  
+
   def destroy
     @user.destroy
-  end  
+  end
 
   private
+
   def user_params
     params.permit(:username, :email, :password)
   end
@@ -73,6 +93,4 @@ class Api::V1::UsersController < ApplicationController
   def is_third_party_sign_up?
     @user[:third_party] == true
   end
-
 end
-

@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2022_09_03_152108) do
+ActiveRecord::Schema.define(version: 2022_09_06_190643) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "pgcrypto"
@@ -29,12 +29,6 @@ ActiveRecord::Schema.define(version: 2022_09_03_152108) do
     t.index ["blockID"], name: "index_blocks_on_blockID"
     t.index ["page_id"], name: "index_blocks_on_page_id"
     t.index ["user_id"], name: "index_blocks_on_user_id"
-  end
-
-  create_table "jwt_denylist", force: :cascade do |t|
-    t.string "jti", null: false
-    t.datetime "exp", null: false
-    t.index ["jti"], name: "index_jwt_denylist_on_jti"
   end
 
   create_table "pages", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
@@ -67,6 +61,7 @@ ActiveRecord::Schema.define(version: 2022_09_03_152108) do
     t.string "password_digest"
     t.boolean "third_party"
     t.string "image"
+    t.boolean "vertify_status"
   end
 
 end
