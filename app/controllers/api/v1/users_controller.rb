@@ -12,27 +12,19 @@ class Api::V1::UsersController < ApplicationController
     if user.nil?
       render json: { status: 'register', message: 'new user need create ! => POST url: /api/v1/users' }
     elsif @user[:third_party] == true
-      # debugger
-      p 'I AM THIRD THIRD THIRD'
       render json: { status: 'third', message: 'user already exists, please press google account bottom' }
     elsif user.email_confirmed == true
       render json: { status: 'login',
                      message: 'user already exists, password, please!  => GET url: /api/v1/users/login' }
     elsif user.email_confirmed.nil?
-
       UserMailer.registration_confirmation(@user).deliver_now
-
       render json: { status: 'unvertify' }
-
     end
   end
 
   def create
     @user = User.create!(user_params)
-    # debugger
     UserMailer.registration_confirmation(@user).deliver_now
-
-    # @user.pages.create!
     render json: { status: 'unvertify',
                    message: 'Please confirm your email address to continue => GET url:  /api/v1/users/email_confirmed' }
   end
