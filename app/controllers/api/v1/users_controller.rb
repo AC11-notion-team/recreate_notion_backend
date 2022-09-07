@@ -12,26 +12,26 @@ class Api::V1::UsersController < ApplicationController
     p '-' * 50
     p params
     p '-' * 50
-      user = User.find_by_email(params[:email])
-    if user.present?
-      if is_third_party_sign_up?
-        render json: { status: 'third', message: 'user already exists, please press google account bottom' }
-      elsif user.vertify_status==true
-      
-        render json: { status: 'login',
-                       message: 'user already exists, password, please!  => GET url: /api/v1/users/login' }
-      end
-    else
+    user = User.find_by_email(params[:email])
+    if user.nil?
+      p '-' * 50
       render json: { status: 'register', message: 'new user need create ! => POST url: /api/v1/users' }
+    elsif @user[:third_party] == true
+      render json: { status: 'third', message: 'user already exists, please press google account bottom' }
+    elsif user.email_confirmed == true
+      render json: { status: 'login',
+                     message: 'user already exists, password, please!  => GET url: /api/v1/users/login' }
+    elsif user.email_confirmed.nil?
+      render json: { status: 'unvertify' }
+      # UserMailer.registration_confirmation(@user).deliver_now
 
     end
   end
 
   def create
     @user = User.create!(user_params)
-    @user.update(
-      vertify_status: false
-    )
+    # debugger
+    @user.pages.create!
     render json: { status: 'unvertify',
                    message: 'Please confirm your email address to continue => GET url:  /api/v1/users/email_confirmed' }
     # UserMailer.registration_confirmation(@user).deliver_now
@@ -39,9 +39,6 @@ class Api::V1::UsersController < ApplicationController
 
   def email_confirmed
     if params[:confirm_token] == @user[:confirm_token]
-      @user.update(
-        vertify_status: true
-      )
       @user.email_activate
       render json: { status: 'login', message: 'Welcome to the Zettel! Your email has been confirmed. GET url: /api/v1/users/login',
                      user_id: @user.id }
