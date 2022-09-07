@@ -10,17 +10,21 @@ Rails.application.routes.draw do
         end
       end
       post '/auth/third_party_login', to: 'authentication#third_party_login'
-      
+      post '/auth/login', to: 'authentication#login'
       resources :blocks, only: [:index, :create, :show, :update, :destroy]  
       resources :pages, only: [:create, :index, :show, :update, :destroy] do
         resources :blocks, only: [:index]
-        member do 
-          post :sava_data
+        collection do 
+          delete "/delete_data", to: 'pages#delete_data'
+        end
+        member do
+          post :save_data
         end
       end
-
+      
       get "/fetch", to: "endpoints#fetchUrl"
       post "/uploadImageByUrl", to: "endpoints#uploadImageByUrl"
     end
-  end  
+  end
 end
+
