@@ -70,6 +70,9 @@ class Api::V1::PagesController < ApplicationController
     )
   end
 
+  def destroy
+  end
+    
   private 
   def page_params
     params.permit(:icon , :cover, :url)

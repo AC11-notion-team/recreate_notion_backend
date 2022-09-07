@@ -20,4 +20,6 @@ class Page < ApplicationRecord
     blocks
   end
 
+  acts_as_paranoid
+
 end

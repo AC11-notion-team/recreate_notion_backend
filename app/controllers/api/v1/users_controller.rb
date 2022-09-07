@@ -10,12 +10,12 @@ class Api::V1::UsersController < ApplicationController
   def email_present
     if User.find_by_email(params[:email]).present?
       if is_third_party_sign_up?
-        render json: { :message => "user already exists, please press google account bottom"}  
+        render json: { "message": "user already exists, please press google account bottom"}  
       else
-        render json: { :message => "user already exists, password, please!  => GET url: /api/v1/users/login"}
+        render json: { "message": "user already exists, password, please!  => GET url: /api/v1/users/login"}
       end
     else
-      render json: { :message => "new user need create ! => POST url: /api/v1/users"}
+      render json: { "message": "new user need create ! => POST url: /api/v1/users"}
     end
   end
 
@@ -23,17 +23,17 @@ class Api::V1::UsersController < ApplicationController
   def create
       @user = User.create!(user_params)
       UserMailer.registration_confirmation(@user).deliver_now
-      render json: { :message => "Please confirm your email address to continue => GET url:  /api/v1/users/email_confirmed" }
+      render json: { "message": "Please confirm your email address to continue => GET url:  /api/v1/users/email_confirmed" }
   
   end
 
   def email_confirmed
     if params[:confirm_token] == @user[:confirm_token]
       @user.email_activate
-      render json: {:message => "Welcome to the Zettel! Your email has been confirmed. GET url: /api/v1/users/login",
-        :user_id => @user.id }
+      render json: {"message": "Welcome to the Zettel! Your email has been confirmed. GET url: /api/v1/users/login",
+        "user_id":  @user.id }
     else
-      render json: {:message => "Sorry. User does not exist"} 
+      render json: {"message": "Sorry. User does not exist"} 
     end
   end
 

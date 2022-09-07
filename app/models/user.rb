@@ -22,6 +22,8 @@ class User < ApplicationRecord
     save!(:validate => false)
   end
 
+  acts_as_paranoid
+
   private
   def confirmation_token
     if self.confirm_token.blank?

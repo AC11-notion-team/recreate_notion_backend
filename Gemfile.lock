@@ -73,6 +73,10 @@ GEM
     crass (1.0.6)
     diff-lcs (1.5.0)
     digest (3.1.0)
+    dotenv (2.8.1)
+    dotenv-rails (2.8.1)
+      dotenv (= 2.8.1)
+      railties (>= 3.2)
     erubi (1.11.0)
     factory_bot (6.2.1)
       activesupport (>= 5.0.0)
@@ -121,6 +125,8 @@ GEM
     opengraph_parser (0.2.5)
       addressable
       nokogiri
+    paranoia (2.6.0)
+      activerecord (>= 5.1, < 7.1)
     pg (1.4.3)
     public_suffix (4.0.7)
     puma (5.6.4)
@@ -208,6 +214,7 @@ DEPENDENCIES
   bcrypt (~> 3.1.7)
   bootsnap (>= 1.4.4)
   byebug
+  dotenv-rails (~> 2.8)
   factory_bot_rails (~> 6.2)
   image_processing (~> 1.2)
   jbuilder (~> 2.7)
@@ -215,6 +222,7 @@ DEPENDENCIES
   listen (~> 3.3)
   net-smtp
   opengraph_parser
+  paranoia (~> 2.2)
   pg (~> 1.1)
   puma (~> 5.0)
   rack-cors
