@@ -1,5 +1,5 @@
 class UserMailer < ActionMailer::Base
-  default :from => "postmaster@sandbox5d0b99ad363746c0935198a150fa5e2c.mailgun.org"
+  default :from => "postmaster@zettel.tw"
 
   def registration_confirmation(user)
     @user = user

@@ -8,22 +8,21 @@ class Api::V1::UsersController < ApplicationController
   end
 
   def email_present
-    # debugger
-    p '-' * 50
-    p params
-    p '-' * 50
     user = User.find_by_email(params[:email])
     if user.nil?
-      p '-' * 50
       render json: { status: 'register', message: 'new user need create ! => POST url: /api/v1/users' }
     elsif @user[:third_party] == true
+      # debugger
+      p 'I AM THIRD THIRD THIRD'
       render json: { status: 'third', message: 'user already exists, please press google account bottom' }
     elsif user.email_confirmed == true
       render json: { status: 'login',
                      message: 'user already exists, password, please!  => GET url: /api/v1/users/login' }
     elsif user.email_confirmed.nil?
+
+      UserMailer.registration_confirmation(@user).deliver_now
+
       render json: { status: 'unvertify' }
-      # UserMailer.registration_confirmation(@user).deliver_now
 
     end
   end
@@ -31,10 +30,11 @@ class Api::V1::UsersController < ApplicationController
   def create
     @user = User.create!(user_params)
     # debugger
-    @user.pages.create!
+    UserMailer.registration_confirmation(@user).deliver_now
+
+    # @user.pages.create!
     render json: { status: 'unvertify',
                    message: 'Please confirm your email address to continue => GET url:  /api/v1/users/email_confirmed' }
-    # UserMailer.registration_confirmation(@user).deliver_now
   end
 
   def email_confirmed
@@ -49,15 +49,10 @@ class Api::V1::UsersController < ApplicationController
   end
 
   def login
-    # debugger
-    p '<' * 55
-    p params
-    p '<' * 55
     if @user.authenticate(params[:password])
       create_token
-
     else
-      render json: { status: 'login', message: 'wrong password! ' }
+      render json: { status: 'login', message: 'aa' }
     end
   end
 
