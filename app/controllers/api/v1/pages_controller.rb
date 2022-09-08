@@ -11,8 +11,7 @@ class Api::V1::PagesController < ApplicationController
       "cover": params[:cover]
     )
     if @page.save
-      @pages = @current_user.pages
-      render 'api/v1/pages/create.json.jbuilder'
+      render json: @page
     else
       render json: { message: "cann't save the page" }
     end
