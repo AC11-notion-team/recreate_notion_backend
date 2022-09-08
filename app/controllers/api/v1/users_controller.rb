@@ -74,8 +74,4 @@ class Api::V1::UsersController < ApplicationController
   def find_user
     @user = User.find_by_email(params[:email])
   end
-
-  # def is_third_party_sign_up?
-  #   @user[:third_party] == true
-  # end
 end
