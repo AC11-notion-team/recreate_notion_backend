@@ -27,8 +27,14 @@ class Api::V1::PagesController < ApplicationController
   end
 
   def show
+    # debugger
+    p ">"*50
+    p params
+    p"<" *50
     @page = Page.find(params[:id])
-    @blocks=Page.print_all_blocks(@page[:tail])
+    if @page.blocks!=[]
+      @blocks=Page.print_all_blocks(@page[:tail])
+    end
     
   end
 
@@ -69,6 +75,17 @@ class Api::V1::PagesController < ApplicationController
       "tail": prev_blockID
     )
   end
+
+  def share
+    @page = Page.find(params[:id])
+    prev_share = @page.share
+    if @page.update(:share !prev_share )
+      render json:{"message":"page #{@page.id} share #{@page.shar} was update"}
+    else
+      render json:{"message":"page #{@page.id} share couldn't update"} , status:404
+    end
+  end
+
 
   private 
   def page_params

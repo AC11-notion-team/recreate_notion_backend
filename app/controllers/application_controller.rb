@@ -15,7 +15,8 @@ class ApplicationController < ActionController::API
     token = jwt_encode(user_id: @user.id)
     render json: {:message => "Log in, successfully!",
       :auth_token => token,
-      :user_id => @user.username,
+      "user_id": @user.id,
+      :user_name => @user.username,
       :user_image=> @user.image }, status: :ok
   end
 end

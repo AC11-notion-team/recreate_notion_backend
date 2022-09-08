@@ -16,6 +16,6 @@ class Api::V1::AuthenticationController < ApplicationController
   
   private
   def create_third_party_user
-    @user = User.new(username: params[:authentication][:name] ,email: params[:authentication][:email] ,password: params[:authentication][:email], third_party: true)  
+    @user = User.new(username: params[:authentication][:name] ,email: params[:authentication][:email] ,password: params[:authentication][:email], third_party: true, )  
   end
 end
