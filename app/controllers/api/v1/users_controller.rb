@@ -10,34 +10,34 @@ class Api::V1::UsersController < ApplicationController
   def email_present
     user = User.find_by_email(params[:email])
     if user.nil?
-      render json: { status: 'register', message: 'new user need create ! => POST url: /api/v1/users' }
+      render json: { "status": 'register', "message": 'new user need create ! => POST url: /api/v1/users' }
     elsif @user[:third_party] == true
-      render json: { status: 'third', message: 'user already exists, please press google account bottom' }
+      render json: { "status": 'third', "message": 'user already exists, please press google account bottom' }
     elsif user.email_confirmed == true
-      render json: { status: 'login',
-                     message: 'user already exists, password, please!  => GET url: /api/v1/users/login' }
+      render json: { "status": 'login',
+                     "message": 'user already exists, password, please!  => GET url: /api/v1/users/login' }
     elsif user.email_confirmed.nil?
       UserMailer.registration_confirmation(@user).deliver_now
-      render json: { status: 'unvertify' }
+      render json: { "status": 'unvertify' }
     end
   end
 
   def create
     @user = User.create!(user_params)
     UserMailer.registration_confirmation(@user).deliver_now
-    render json: { status: 'unvertify',
-                   message: 'Please confirm your email address to continue => GET url:  /api/v1/users/email_confirmed' }
+    render json: { "status": 'unvertify',
+                   "message": 'Please confirm your email address to continue => GET url:  /api/v1/users/email_confirmed' }
   end
 
   def email_confirmed
     if params[:confirm_token] == @user[:confirm_token]
       @user.email_activate
       @user.pages.create!
-      render json: { status: 'login', message: 'Welcome to the Zettel! Your email has been confirmed. GET url: /api/v1/users/login',
-                     user_id: @user.id }
+      render json: { "status": 'login', "message": 'Welcome to the Zettel! Your email has been confirmed. GET url: /api/v1/users/login',
+                     "user_id": @user.id }
 
     else
-      render json: { status: 'unvertify', message: 'Sorry. User does not exist' }
+      render json: { "status": 'unvertify', "message": 'Sorry. User does not exist' }
     end
   end
 
@@ -45,7 +45,7 @@ class Api::V1::UsersController < ApplicationController
     if @user.authenticate(params[:password])
       create_token
     else
-      render json: { status: 'login', message: 'aa' }
+      render json: { "status": 'login', "message": 'password wrong' }
     end
   end
 
@@ -56,7 +56,7 @@ class Api::V1::UsersController < ApplicationController
 
   def update
     unless @user.update(user_params)
-      render json: { errors: @user.errors.full_message },
+      render json: { "errors": @user.errors.full_message },
              status: :unprocessable_entity
     end
   end
@@ -75,7 +75,7 @@ class Api::V1::UsersController < ApplicationController
     @user = User.find_by_email(params[:email])
   end
 
-  def is_third_party_sign_up?
-    @user[:third_party] == true
-  end
+  # def is_third_party_sign_up?
+  #   @user[:third_party] == true
+  # end
 end
