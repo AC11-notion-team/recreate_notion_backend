@@ -9,7 +9,10 @@ class Page < ApplicationRecord
   #Linklist function
   def self.print_all_blocks(tail)
     block = Block.find_by("blockID": tail)
-    blocks =[]
+    blocks = []
+    
+    return blocks if block == nil || block.nil?
+
     blocks.unshift(block)
     prev_blockID = block[:prev_blockID]
     while prev_blockID != nil
@@ -17,7 +20,8 @@ class Page < ApplicationRecord
       blocks.unshift(block)
       prev_blockID = block[:prev_blockID]
     end
-    blocks
+    
+    blocks 
   end
 
 end
