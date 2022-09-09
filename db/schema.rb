@@ -44,6 +44,15 @@ ActiveRecord::Schema.define(version: 2022_09_09_095406) do
     t.boolean "editable", default: false
   end
 
+  create_table "sharepages", force: :cascade do |t|
+    t.bigint "user_id"
+    t.string "permission"
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
+    t.uuid "page_id"
+    t.index ["user_id"], name: "index_sharepages_on_user_id"
+  end
+
   create_table "users", force: :cascade do |t|
     t.string "username"
     t.string "email"
@@ -54,6 +63,7 @@ ActiveRecord::Schema.define(version: 2022_09_09_095406) do
     t.string "password_digest"
     t.boolean "third_party"
     t.string "image"
+    t.boolean "vertify_status"
   end
 
 end
