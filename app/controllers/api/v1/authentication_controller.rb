@@ -7,15 +7,18 @@ class Api::V1::AuthenticationController < ApplicationController
     else
       create_third_party_user
       if @user.save
+        @user.pages.create!
         create_token
       else
-        render json:{message:"wrong key"}
+        render json: { message: 'wrong key' }
       end
     end
-  end 
-  
+  end
+
   private
+
   def create_third_party_user
-    @user = User.new(username: params[:authentication][:name] ,email: params[:authentication][:email] ,password: params[:authentication][:email], third_party: true)  
+    @user = User.new(username: params[:authentication][:name], email: params[:authentication][:email],
+                     password: params[:authentication][:email], third_party: true)
   end
 end
