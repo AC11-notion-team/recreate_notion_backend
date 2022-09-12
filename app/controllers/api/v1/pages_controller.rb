@@ -29,7 +29,7 @@ class Api::V1::PagesController < ApplicationController
   def show
     @page = Page.find(params[:id])
     @blocks = Page.print_all_blocks(@page[:tail])
-    @blocks = Page.print_all_blocks(@page[:tail]) if @page.blocks != []
+    # @blocks = Page.print_all_blocks(@page[:tail]) if @page.blocks != []
     if @current_user == @page[:user_id]
       @state = 'is a current user'
     else
@@ -48,8 +48,7 @@ class Api::V1::PagesController < ApplicationController
   end
 
   def save_data
-    @page = Page.find_by(id: params[:id])
-    p params[:page_id]
+    @page = Page.find_by(id: params[:page_id])
     @page.update(
       "title": params[:title],
       "icon": params[:icon],
@@ -85,7 +84,7 @@ class Api::V1::PagesController < ApplicationController
   end
 
   def share
-    @page = Page.find(params[:id])
+    @page = Page.find(params[:page_id])
     prev_share = @page[:share]
 
     if @page.update("share": "#{!prev_share}")
@@ -101,7 +100,7 @@ class Api::V1::PagesController < ApplicationController
   end
 
   def editable
-    @page = Page.find(params[:id])
+    @page = Page.find(params[:page_id])
     prev_editable = @page[:editable]
 
     if @page.update("editable": !prev_editable)
