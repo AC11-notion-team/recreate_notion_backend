@@ -49,11 +49,6 @@ class Api::V1::PagesController < ApplicationController
 
   def save_data
     @page = Page.find_by(id: params[:page_id])
-    @page.update(
-      "title": params[:title],
-      "icon": params[:icon],
-      "cover": params[:cover]
-    )
     block_data = params[:api][:blocks]
     prev_blockID = nil
     block_data.map.with_index do |block, _index|
