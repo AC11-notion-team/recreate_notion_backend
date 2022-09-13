@@ -18,14 +18,17 @@ class Api::V1::PagesController < ApplicationController
   end
 
   def update
-    @page = Page.find(params[:id])
-    if @page.update
-      render json: { message: "page #{@page[:id]} was update" }
-    else
-      render json: { message: "page #{@page[:id]} couldn't update" }, status: 404
-    end
-  end
 
+    @page = Page.find(params[:id])
+
+    if params[:title]
+       @page.update(title: params[:title])
+    else
+       @page.update(icon: params[:icon])
+    end
+
+  end
+  
   def show
     @page = Page.find(params[:id])
     @blocks = Page.print_all_blocks(@page[:tail]) if @page.blocks != []
