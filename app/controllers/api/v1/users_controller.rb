@@ -50,7 +50,7 @@ class Api::V1::UsersController < ApplicationController
   end
 
   def show
-    @pages = @current_user.pages
+    @pages = @current_user.pages.order('created_at ASC')
     # render json: @user, status: :ok
   end
 

@@ -1,5 +1,5 @@
 class Api::V1::PagesController < ApplicationController
-  # before_action :authenticate_request
+  before_action :authenticate_request
 
   def index
     @pages = current_user.pages
@@ -18,17 +18,15 @@ class Api::V1::PagesController < ApplicationController
   end
 
   def update
-
     @page = Page.find(params[:id])
 
     if params[:title]
-       @page.update(title: params[:title])
+      @page.update(title: params[:title])
     else
-       @page.update(icon: params[:icon])
+      @page.update(icon: params[:icon])
     end
-
   end
-  
+
   def show
     @page = Page.find(params[:id])
     @blocks = Page.print_all_blocks(@page[:tail]) if @page.blocks != []
@@ -116,6 +114,12 @@ class Api::V1::PagesController < ApplicationController
       @nextBlock.update("prev_blockID": @block.prev_blockID)
     end
     @block.destroy
+  end
+
+  def delete_page
+    @page = Page.find_by(id: params[:page_id])
+    @page.destroy
+    # redirect_to api_v1_user(@current_user)
   end
 
   private
