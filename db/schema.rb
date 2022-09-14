@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2022_09_12_104230) do
+ActiveRecord::Schema.define(version: 2022_09_14_000642) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "pgcrypto"
@@ -26,7 +26,9 @@ ActiveRecord::Schema.define(version: 2022_09_12_104230) do
     t.string "blockID"
     t.integer "index_number"
     t.string "prev_blockID"
+    t.datetime "deleted_at"
     t.index ["blockID"], name: "index_blocks_on_blockID"
+    t.index ["deleted_at"], name: "index_blocks_on_deleted_at"
     t.index ["page_id"], name: "index_blocks_on_page_id"
     t.index ["user_id"], name: "index_blocks_on_user_id"
   end
@@ -42,6 +44,17 @@ ActiveRecord::Schema.define(version: 2022_09_12_104230) do
     t.string "tail"
     t.boolean "share", default: false
     t.boolean "editable", default: false
+    t.datetime "deleted_at"
+    t.index ["deleted_at"], name: "index_pages_on_deleted_at"
+  end
+
+  create_table "sharepages", force: :cascade do |t|
+    t.bigint "user_id"
+    t.string "permission"
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
+    t.uuid "page_id"
+    t.index ["user_id"], name: "index_sharepages_on_user_id"
   end
 
   create_table "users", force: :cascade do |t|
