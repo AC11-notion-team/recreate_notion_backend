@@ -32,7 +32,7 @@ class Api::V1::UsersController < ApplicationController
   def email_confirmed
     if params[:confirm_token] == @user[:confirm_token]
       @user.email_activate
-      @user.pages.create!
+
       render json: { "status": 'login', "message": 'Welcome to the Zettel! Your email has been confirmed. GET url: /api/v1/users/login',
                      "user_id": @user.id }
 
