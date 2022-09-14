@@ -1,5 +1,5 @@
 class Api::V1::PagesController < ApplicationController
-  # before_action :authenticate_request
+  before_action :authenticate_request
 
   def index
     @pages = current_user.pages
@@ -19,17 +19,17 @@ class Api::V1::PagesController < ApplicationController
 
   def update
     @page = Page.find(params[:id])
-    if @page.update
-      render json: { message: "page #{@page[:id]} was update" }
+
+    if params[:title]
+      @page.update(title: params[:title])
     else
-      render json: { message: "page #{@page[:id]} couldn't update" }, status: 404
+      @page.update(icon: params[:icon])
     end
   end
 
   def show
     @page = Page.find(params[:id])
-    @blocks = Page.print_all_blocks(@page[:tail])
-    # @blocks = Page.print_all_blocks(@page[:tail]) if @page.blocks != []
+    @blocks = Page.print_all_blocks(@page[:tail]) if @page.blocks != []
     if @current_user == @page[:user_id]
       @state = 'is a current user'
     else
@@ -54,7 +54,6 @@ class Api::V1::PagesController < ApplicationController
     block_data.map.with_index do |block, _index|
       @find_block = Block.where(blockID: block[:id])
       if @find_block.empty?
-
         @block = @page.blocks.new(
           "blockID": block[:id],
           "kind": block[:type],
@@ -81,7 +80,6 @@ class Api::V1::PagesController < ApplicationController
   def share
     @page = Page.find(params[:page_id])
     prev_share = @page[:share]
-
     if @page.update("share": "#{!prev_share}")
       share = @page[:share]
       if share
@@ -116,6 +114,12 @@ class Api::V1::PagesController < ApplicationController
       @nextBlock.update("prev_blockID": @block.prev_blockID)
     end
     @block.destroy
+  end
+
+  def delete_page
+    @page = Page.find_by(id: params[:page_id])
+    @page.destroy
+    # redirect_to api_v1_user(@current_user)
   end
 
   private
