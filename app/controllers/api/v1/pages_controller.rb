@@ -47,6 +47,10 @@ class Api::V1::PagesController < ApplicationController
     end
   end
 
+  def show_page_info
+    @page = Page.find_by(id: params[:page_id])
+  end
+
   def save_data
     @page = Page.find_by(id: params[:page_id])
     block_data = params[:api][:blocks]
