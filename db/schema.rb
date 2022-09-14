@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2022_09_14_000642) do
+ActiveRecord::Schema.define(version: 2022_09_14_121820) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "pgcrypto"
@@ -42,9 +42,8 @@ ActiveRecord::Schema.define(version: 2022_09_14_000642) do
     t.integer "user_id"
     t.string "title", default: "Untitled"
     t.string "tail"
-    t.boolean "share", default: false
-    t.boolean "editable", default: false
     t.datetime "deleted_at"
+    t.boolean "editable"
     t.index ["deleted_at"], name: "index_pages_on_deleted_at"
   end
 
