@@ -12,7 +12,7 @@ gem 'puma', '~> 5.0'
 # Build JSON APIs with ease. Read more: https://github.com/rails/jbuilder
 gem 'jbuilder', '~> 2.7'
 # Use Redis adapter to run Action Cable in production
-gem 'redis', '~> 4.0'
+# gem 'redis', '~> 4.0'
 # Use Active Model has_secure_password
 gem 'bcrypt', '~> 3.1.7'
 gem 'jwt'
@@ -42,10 +42,7 @@ gem 'tzinfo-data', platforms: [:mingw, :mswin, :x64_mingw, :jruby]
 gem 'net-smtp', require: false
 
 
-group :test do
-  gem "rspec-rails", "~> 5.1"
-  gem "factory_bot_rails", "~> 6.2"
-end
-gem "aasm"
+
 # fetch utilities
 gem "opengraph_parser"
+gem 'paranoia', '~> 2.1', '>= 2.1.5'
