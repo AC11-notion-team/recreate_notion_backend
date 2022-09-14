@@ -6,9 +6,9 @@ Rails.application.routes.draw do
           get :email_present
           post :login
           get :email_confirmed
+          post :third_party_login
         end
       end
-      post '/auth/third_party_login', to: 'authentication#third_party_login'
 
       resources :blocks, only: %i[index create show update destroy]
       resources :pages, only: %i[create index show update destroy] do

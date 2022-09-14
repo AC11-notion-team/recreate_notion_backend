@@ -1,6 +1,6 @@
 class Api::V1::UsersController < ApplicationController
-  skip_before_action :authenticate_request, only: %i[email_present create email_confirmed login]
-  before_action :find_user, only: %i[show destroy login email_present email_confirmed]
+  skip_before_action :authenticate_request, only: %i[email_present create email_confirmed login third_party_login]
+  before_action :find_user, only: %i[show destroy login email_present email_confirmed third_party_login]
 
   def index
     @users = User.all
@@ -49,6 +49,20 @@ class Api::V1::UsersController < ApplicationController
     end
   end
 
+  def third_party_login
+    if @user = User.find_by_email(params[:email])
+      create_token
+    else
+      create_third_party_user
+      if @user.save
+        @user.pages.create!
+        create_token
+      else
+        render json: { message: 'wrong key' }
+      end
+    end
+  end
+
   def show
     @pages = @current_user.pages.order('created_at ASC')
     # render json: @user, status: :ok
@@ -73,5 +87,10 @@ class Api::V1::UsersController < ApplicationController
 
   def find_user
     @user = User.find_by_email(params[:email])
+  end
+
+  def create_third_party_user
+    @user = User.new(username: params[:authentication][:name], email: params[:authentication][:email],
+                     password: params[:authentication][:email], third_party: true)
   end
 end
