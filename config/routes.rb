@@ -16,6 +16,7 @@ Rails.application.routes.draw do
         put  :set_current_page
         put :share
         put :editable
+        get :show_page_info
         delete :delete_page
         resources :blocks, only: [:index]
         collection do

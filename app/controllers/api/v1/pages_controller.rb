@@ -30,21 +30,10 @@ class Api::V1::PagesController < ApplicationController
   def show
     @page = Page.find(params[:id])
     @blocks = Page.print_all_blocks(@page[:tail]) if @page.blocks != []
-    if @current_user == @page[:user_id]
-      @state = 'is a current user'
-    else
-      share = @page[:share]
-      if share
-        editable = @page[:editable]
-        @state = if editable
-                   'can write'
-                 else
-                   'can read'
-                 end
-      else
-        @state = 'refuse'
-      end
-    end
+  end
+
+  def show_page_info
+    @page = Page.find_by(id: params[:page_id])
   end
 
   def save_data
@@ -77,30 +66,11 @@ class Api::V1::PagesController < ApplicationController
     )
   end
 
-  def share
-    @page = Page.find(params[:page_id])
-    prev_share = @page[:share]
-    if @page.update("share": "#{!prev_share}")
-      share = @page[:share]
-      if share
-        render json: { "page": "#{@page[:id]}", "share": "#{@page[:share]}", "state": ' was update' }
-      else
-        @page.update("editable": 'false')
-      end
-    else
-      render json: { "page": "#{@page[:id]}", "state": "share couldn't update" }, status: 404
-    end
-  end
-
   def editable
-    @page = Page.find(params[:page_id])
-    prev_editable = @page[:editable]
-
-    if @page.update("editable": !prev_editable)
-      render json: { "share": "#{@page[:share]}", "editable": "#{@page[:editable]}", "state": 'was update' }
-    else
-      render json: { "page": "#{@page[:id]}", "state": "editable couldn't update" }, status: 404
-    end
+    page = @current_user.pages.find(params[:page_id])
+    page.update(
+      editable: params[:state]
+    )
   end
 
   def delete_data
@@ -119,7 +89,6 @@ class Api::V1::PagesController < ApplicationController
   def delete_page
     @page = Page.find_by(id: params[:page_id])
     @page.destroy
-    # redirect_to api_v1_user(@current_user)
   end
 
   private
