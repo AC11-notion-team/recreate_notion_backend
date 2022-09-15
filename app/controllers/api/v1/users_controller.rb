@@ -1,62 +1,71 @@
 class Api::V1::UsersController < ApplicationController
   skip_before_action :authenticate_request, only: %i[email_present create email_confirmed login third_party_login]
-  before_action :find_user, only: %i[show destroy login email_present email_confirmed third_party_login]
+  before_action :find_user, only: %i[show login email_present email_confirmed third_party_login]
 
   def index
-    @users = User.all
-    render json: @users, status: :ok
+    render json: User.all, status: :ok
   end
 
   def email_present
-    user = User.find_by_email(params[:email])
-    if user.nil?
-      render json: { "status": 'register', "message": 'new user need create ! => POST url: /api/v1/users' }
-    elsif @user[:third_party] == true
-      render json: { "status": 'third', "message": 'user already exists, please press google account bottom' }
-    elsif user.email_confirmed == true
-      render json: { "status": 'login',
-                     "message": 'user already exists, password, please!  => GET url: /api/v1/users/login' }
-    elsif user.email_confirmed.nil?
+    render json: {
+      status: 'register',
+      message: 'new user need create!'
+    } and return if @user.nil?
+    
+    render json: {
+      status: 'third',
+      message: 'user already exists, please press google account bottom'
+    } and return if @user[:third_party]
+      
+    render json: {
+    status: 'login',
+    message: 'user already exists, password, please!'
+    } and return if @user.email_confirmed
+    
+    if @user.email_confirmed.nil?
       UserMailer.registration_confirmation(@user).deliver_now
-      render json: { "status": 'unvertify' }
+      render json: { status: 'unvertify' }
     end
   end
 
   def create
-    @user = User.create!(user_params)
-    UserMailer.registration_confirmation(@user).deliver_now
-    render json: { "status": 'unvertify',
-                   "message": 'Please confirm your email address to continue => GET url:  /api/v1/users/email_confirmed' }
+    user = User.create!(user_params)
+    UserMailer.registration_confirmation(user).deliver_now
+    render json: { 
+      status: 'unvertify',
+      message: 'Please confirm your email address to continue' 
+    }
   end
 
   def email_confirmed
     if params[:confirm_token] == @user[:confirm_token]
       @user.email_activate
-
-      render json: { "status": 'login', "message": 'Welcome to the Zettel! Your email has been confirmed. GET url: /api/v1/users/login',
-                     "user_id": @user.id }
-
+      render json: { 
+        status: 'login', 
+        message: 'Welcome to the Zettel! Your email has been confirmed.',
+        user_id: @user.id 
+      }
     else
-      render json: { "status": 'unvertify', "message": 'Sorry. User does not exist' }
+      render json: { status: 'unvertify', message: 'Sorry. User does not exist' }
     end
   end
 
   def login
     if @user.authenticate(params[:password])
-      create_token
+      create_token_for(@user)
     else
       render json: { "status": 'login', "message": 'password wrong' }
     end
   end
 
   def third_party_login
-    if @user = User.find_by_email(params[:email])
-      create_token
+    if @user
+      create_token_for(@user)
     else
-      create_third_party_user
-      if @user.save
-        @user.pages.create!
-        create_token
+      user = build_third_party_user_with(params[:authentication])
+      if user.save
+        user.pages.create!
+        create_token_for(@user)
       else
         render json: { message: 'wrong key' }
       end
@@ -64,8 +73,8 @@ class Api::V1::UsersController < ApplicationController
   end
 
   def show
+    user = User.find_by(email: params[:email])
     @pages = @current_user.pages.order('created_at ASC')
-    # render json: @user, status: :ok
   end
 
   def update
@@ -75,10 +84,6 @@ class Api::V1::UsersController < ApplicationController
     end
   end
 
-  def destroy
-    @user.destroy
-  end
-
   private
 
   def user_params
@@ -86,11 +91,15 @@ class Api::V1::UsersController < ApplicationController
   end
 
   def find_user
-    @user = User.find_by_email(params[:email])
+    @user = User.find_by(email: params[:email])
   end
 
-  def create_third_party_user
-    @user = User.new(username: params[:authentication][:name], email: params[:authentication][:email],
-                     password: params[:authentication][:email], third_party: true)
+  def build_third_party_user_with(data)
+    User.new( 
+      username: data[:name], 
+      email: data[:email],
+      assword: data[:email], 
+      third_party: true
+    )
   end
 end
