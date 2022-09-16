@@ -19,11 +19,21 @@ gem 'jwt'
 # Use Active Storage variant
 gem 'image_processing', '~> 1.2'
 
+
 # Reduces boot times through caching; required in config/boot.rb
 gem 'bootsnap', '>= 1.4.4', require: false
 
 # Use Rack CORS for handling Cross-Origin Resource Sharing (CORS), making cross-origin AJAX possible
 gem 'rack-cors'
+
+# fetch utilities
+gem "opengraph_parser"
+gem 'paranoia', '~> 2.1', '>= 2.1.5'
+
+# Windows does not include zoneinfo files, so bundle the tzinfo-data gem
+gem 'tzinfo-data', platforms: [:mingw, :mswin, :x64_mingw, :jruby]
+gem 'net-smtp', require: false
+
 
 group :development, :test do
   # Call 'byebug' anywhere in the code to stop execution and get a debugger console
@@ -37,17 +47,15 @@ group :development do
   gem 'spring'
 end
 
+<<<<<<< HEAD
 # Windows does not include zoneinfo files, so bundle the tzinfo-data gem
 gem 'tzinfo-data', platforms: [:mingw, :mswin, :x64_mingw, :jruby]
 gem 'net-smtp', require: false
 gem 'net-imap', require: false
 gem 'net-pop', require: false
+=======
+>>>>>>> b4c1109c21b399355e1b7d9e7d57b3e61eeb8fa5
 
 
-group :test do
-  gem "rspec-rails", "~> 5.1"
-  gem "factory_bot_rails", "~> 6.2"
-end
-gem "aasm"
-# fetch utilities
-gem "opengraph_parser"
+
+
