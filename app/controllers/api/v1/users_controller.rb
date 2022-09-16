@@ -71,10 +71,6 @@ class Api::V1::UsersController < ApplicationController
   def show
     user = User.find_by(email: params[:email])
     @pages = @current_user.pages.order('created_at ASC')
-<<<<<<< HEAD
-
-=======
->>>>>>> 6a8f137969e8d5c96be077d62ae41d893a6f7c85
   end
 
   def update

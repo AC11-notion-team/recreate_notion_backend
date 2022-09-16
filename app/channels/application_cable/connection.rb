@@ -5,7 +5,6 @@ module ApplicationCable
     identified_by :authenticate_request
 
     def connect
-      # debugger
       header = request.headers['Authorization']
       header = header.split(' ').last if header
       decode = jwt_decode(header)
