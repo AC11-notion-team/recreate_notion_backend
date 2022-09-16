@@ -18,19 +18,17 @@ class User < ApplicationRecord
   has_many :linkpages, through: :sharepages, source: :page
 
   def email_activate
-    self.email_confirmed = true
-    self.confirm_token = nil
-    save!(validate: false)
+    update(email_confirmed: true, confirm_token: nil)
   end
 
   private
 
   def confirmation_token
-    self.confirm_token = SecureRandom.urlsafe_base64.to_s if confirm_token.blank?
+    self.confirm_token = [*'0'..'9'].sample(4).join if confirm_token.blank?
   end
 
   def init_template
-    init_block_data = [{ 'id': '05Ac-bg8U8',
+    init_block_data = [{ id: '05Ac-bg8U8',
                          'type': 'header', 'data': { 'text': '<b>開始使用Zettel</b>', 'level': 1 } },
                        { 'id': '4_ssCOKw4Y', 'type': 'paragraph', 'data': { 'text': '選擇旁邊的<code class="inline-code"> “＋”</code>，你可以在這裡使用更多有趣的功能' } }, { 'id': 'VZQ1Cb0rlk', 'type': 'image', 'data': { 'file': { 'url': 'https://image-repo-zeltek.s3.ap-northeast-1.amazonaws.com/8856641178649' }, 'caption': '就像這樣～', 'withBorder': false, 'stretched': false, 'withBackground': false } }, { 'id': 'u4jZeOYkA6', 'type': 'paragraph', 'data': { 'text': '另外更可以透過拖動來調整段落順序' } }, { 'id': 'YJyQ7HP-9-', 'type': 'image', 'data': { 'file': { 'url': 'https://image-repo-zeltek.s3.ap-northeast-1.amazonaws.com/9690636103570' }, 'caption': '', 'withBorder': false, 'stretched': false, 'withBackground': false } }, { 'id': 'mbZUPy2YZI', 'type': 'paragraph', 'data': { 'text': '讓我們開始吧.....' } }]
     page_title = '開始使用Zettel'
@@ -51,16 +49,17 @@ class User < ApplicationRecord
     prev_blockID = nil
     data_block.map do |block|
       init_block = page.blocks.new(
-        "blockID": block[:id],
-        "kind": block[:type],
-        "data": block[:data],
-        "prev_blockID": prev_blockID
+        blockID: block[:id],
+        kind: block[:type],
+        data: block[:data],
+        prev_blockID: prev_blockID
       )
       prev_blockID = block[:id]
       init_block.save
     end
     page.update(
-      "tail": prev_blockID
+      tail: prev_blockID
     )
   end
 end
+

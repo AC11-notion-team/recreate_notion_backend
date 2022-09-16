@@ -26,6 +26,15 @@ gem 'bootsnap', '>= 1.4.4', require: false
 # Use Rack CORS for handling Cross-Origin Resource Sharing (CORS), making cross-origin AJAX possible
 gem 'rack-cors'
 
+# fetch utilities
+gem "opengraph_parser"
+gem 'paranoia', '~> 2.1', '>= 2.1.5'
+
+# Windows does not include zoneinfo files, so bundle the tzinfo-data gem
+gem 'tzinfo-data', platforms: [:mingw, :mswin, :x64_mingw, :jruby]
+gem 'net-smtp', require: false
+
+
 group :development, :test do
   # Call 'byebug' anywhere in the code to stop execution and get a debugger console
   gem 'byebug', platforms: [:mri, :mingw, :x64_mingw]
@@ -38,12 +47,7 @@ group :development do
   gem 'spring'
 end
 
-# Windows does not include zoneinfo files, so bundle the tzinfo-data gem
-gem 'tzinfo-data', platforms: [:mingw, :mswin, :x64_mingw, :jruby]
-gem 'net-smtp', require: false
 
 
 
-# fetch utilities
-gem "opengraph_parser"
-gem 'paranoia', '~> 2.1', '>= 2.1.5'
+
