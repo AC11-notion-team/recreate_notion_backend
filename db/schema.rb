@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2022_09_14_121820) do
+ActiveRecord::Schema.define(version: 2022_09_15_053128) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "pgcrypto"
@@ -48,11 +48,11 @@ ActiveRecord::Schema.define(version: 2022_09_14_121820) do
   end
 
   create_table "sharepages", force: :cascade do |t|
-    t.bigint "user_id"
-    t.string "permission"
+    t.uuid "page_id", null: false
+    t.bigint "user_id", null: false
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
-    t.uuid "page_id"
+    t.index ["page_id"], name: "index_sharepages_on_page_id"
     t.index ["user_id"], name: "index_sharepages_on_user_id"
   end
 
@@ -69,4 +69,6 @@ ActiveRecord::Schema.define(version: 2022_09_14_121820) do
     t.boolean "vertify_status"
   end
 
+  add_foreign_key "sharepages", "pages"
+  add_foreign_key "sharepages", "users"
 end

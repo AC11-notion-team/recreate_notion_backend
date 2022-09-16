@@ -2,11 +2,6 @@ class Api::V1::UsersController < ApplicationController
   skip_before_action :authenticate_request, only: %i[email_present create email_confirmed login]
   before_action :find_user, only: %i[show destroy login email_present email_confirmed]
 
-  def index
-    @users = User.all
-    render json: @users, status: :ok
-  end
-
   def email_present
     user = User.find_by_email(params[:email])
     if user.nil?
@@ -51,7 +46,7 @@ class Api::V1::UsersController < ApplicationController
 
   def show
     @pages = @current_user.pages.order('created_at ASC')
-    # render json: @user, status: :ok
+
   end
 
   def update

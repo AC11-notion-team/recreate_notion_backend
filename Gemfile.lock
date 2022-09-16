@@ -60,8 +60,6 @@ GEM
       minitest (>= 5.1)
       tzinfo (~> 2.0)
       zeitwerk (~> 2.3)
-    acts_as_list (1.0.4)
-      activerecord (>= 4.2)
     addressable (2.8.0)
       public_suffix (>= 2.0.2, < 5.0)
     bcrypt (3.1.18)
@@ -161,6 +159,7 @@ GEM
     rb-fsevent (0.11.1)
     rb-inotify (0.10.1)
       ffi (~> 1.0)
+    redis (4.8.0)
     ruby-vips (2.1.4)
       ffi (~> 1.12)
     spring (4.0.0)
@@ -187,7 +186,6 @@ PLATFORMS
   x86_64-linux
 
 DEPENDENCIES
-  acts_as_list (~> 1.0)
   bcrypt (~> 3.1.7)
   bootsnap (>= 1.4.4)
   byebug
@@ -203,6 +201,7 @@ DEPENDENCIES
   puma (~> 5.0)
   rack-cors
   rails (~> 6.1.6, >= 6.1.6.1)
+  redis (~> 4.0)
   spring
   tzinfo-data
 
