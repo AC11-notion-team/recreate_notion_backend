@@ -3,8 +3,6 @@ json.icon @page.icon
 json.cover @page.cover
 json.url @page.url
 json.tail @page.tail
-json.state @state
-json.share @page.share
 json.editable @page.editable
 json.blocks @blocks do |block|
   json.id block.blockID
