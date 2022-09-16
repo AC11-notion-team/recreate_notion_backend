@@ -6,6 +6,7 @@ Rails.application.routes.draw do
           get :email_present
           post :login
           get :email_confirmed
+          get :search_user
         end
       end
       post '/auth/third_party_login', to: 'authentication#third_party_login'

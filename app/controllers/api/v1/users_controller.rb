@@ -65,6 +65,12 @@ class Api::V1::UsersController < ApplicationController
     @user.destroy
   end
 
+  def search_user 
+    if !params[:search].empty?
+      @users = User.where("email like ?", "%#{params[:search]}%")
+    end
+  end
+
   private
 
   def user_params
