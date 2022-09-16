@@ -47,14 +47,11 @@ group :development do
   gem 'spring'
 end
 
-<<<<<<< HEAD
 # Windows does not include zoneinfo files, so bundle the tzinfo-data gem
 gem 'tzinfo-data', platforms: [:mingw, :mswin, :x64_mingw, :jruby]
 gem 'net-smtp', require: false
 gem 'net-imap', require: false
 gem 'net-pop', require: false
-=======
->>>>>>> b4c1109c21b399355e1b7d9e7d57b3e61eeb8fa5
 
 
 
