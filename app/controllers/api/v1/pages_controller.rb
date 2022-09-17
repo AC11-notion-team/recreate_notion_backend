@@ -1,5 +1,6 @@
 class Api::V1::PagesController < ApplicationController
   before_action :authenticate_request
+  before_action :have_permission?, only: %i[show update]
 
   def index
     @pages = current_user.pages
@@ -11,7 +12,7 @@ class Api::V1::PagesController < ApplicationController
       "cover": params[:cover]
     )
     if page.save
-      @current_user.pages << page
+      Sharepage.create!(user_id: @current_user.id, page_id: page.id, editable: :ture)
       render json: page
     else
       render json: { message: "cann't save the page" }
@@ -98,13 +99,5 @@ class Api::V1::PagesController < ApplicationController
 
   def page_params
     params.permit(:icon, :cover, :url)
-  end
-  def have_permission?(page,user)
-    if page.editable.nil?
-       render :status=> 404
-    end
-    if page.users.includes?(user)
-      render :status=> 404
-    end
   end
 end
