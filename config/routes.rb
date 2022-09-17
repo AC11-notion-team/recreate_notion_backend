@@ -7,6 +7,7 @@ Rails.application.routes.draw do
           get :email_present
           post :login
           get :email_confirmed
+          get :search_user
           post :third_party_login
         end
       end
