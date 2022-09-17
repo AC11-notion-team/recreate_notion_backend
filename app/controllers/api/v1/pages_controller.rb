@@ -6,12 +6,13 @@ class Api::V1::PagesController < ApplicationController
   end
 
   def create
-    @page = @current_user.pages.create(
+    page = Page.create(
       "icon": params[:icon],
       "cover": params[:cover]
     )
-    if @page.save
-      render json: @page
+    if page.save
+      @current_user.pages << page
+      render json: page
     else
       render json: { message: "cann't save the page" }
     end
@@ -87,13 +88,23 @@ class Api::V1::PagesController < ApplicationController
   end
 
   def delete_page
-    @page = Page.find_by(id: params[:page_id])
-    @page.destroy
+    page = Page.find_by(id: params[:page_id])
+    sp = Sharepage.find_by(page_id: page.id)
+    sp.destroy
+    page.destroy
   end
 
   private
 
   def page_params
     params.permit(:icon, :cover, :url)
+  end
+  def have_permission?(page,user)
+    if page.editable.nil?
+       render :status=> 404
+    end
+    if page.users.includes?(user)
+      render :status=> 404
+    end
   end
 end
