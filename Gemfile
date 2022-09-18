@@ -32,7 +32,6 @@ gem 'paranoia', '~> 2.1', '>= 2.1.5'
 
 # Windows does not include zoneinfo files, so bundle the tzinfo-data gem
 gem 'tzinfo-data', platforms: [:mingw, :mswin, :x64_mingw, :jruby]
-gem 'net-smtp', require: false
 
 
 group :development, :test do
@@ -48,7 +47,6 @@ group :development do
 end
 
 # Windows does not include zoneinfo files, so bundle the tzinfo-data gem
-gem 'tzinfo-data', platforms: [:mingw, :mswin, :x64_mingw, :jruby]
 gem 'net-smtp', require: false
 gem 'net-imap', require: false
 gem 'net-pop', require: false
