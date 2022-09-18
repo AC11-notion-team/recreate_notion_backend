@@ -30,13 +30,8 @@ class Api::V1::PagesController < ApplicationController
 
   def show
     @page = Page.find(params[:id])
-    render status: 404 unless @page.users.include?(@current_user)
-    render status: 404 if @page.editable.nil? && !@page.users.include?(@current_user)
-    @blocks = if @page.blocks != []
-                @blocks = Page.print_all_blocks(@page[:tail]) if @page.blocks != []
-              else
-                []
-              end
+    render status: 404 if !@page.users.include?(@current_user) && @page.editable.nil?
+    @blocks = @page.blocks != [] ? Page.print_all_blocks(@page[:tail]) : []
   end
 
   def show_page_info
