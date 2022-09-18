@@ -1,6 +1,5 @@
 class Api::V1::PagesController < ApplicationController
   before_action :authenticate_request
-  before_action :have_permission?, only: %i[show update]
 
   def index
     @pages = current_user.pages
@@ -31,7 +30,13 @@ class Api::V1::PagesController < ApplicationController
 
   def show
     @page = Page.find(params[:id])
-    @blocks = Page.print_all_blocks(@page[:tail]) if @page.blocks != []
+    render status: 404 unless @page.users.include?(@current_user)
+    render status: 404 if @page.editable.nil? && !@page.users.include?(@current_user)
+    @blocks = if @page.blocks != []
+                @blocks = Page.print_all_blocks(@page[:tail]) if @page.blocks != []
+              else
+                []
+              end
   end
 
   def show_page_info

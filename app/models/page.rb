@@ -1,5 +1,6 @@
 class Page < ApplicationRecord
   acts_as_paranoid
+  attr_accessor :shareuser
 
   # 關聯
   has_many :blocks

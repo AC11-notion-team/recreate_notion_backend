@@ -11,7 +11,10 @@ Rails.application.routes.draw do
           post :third_party_login
         end
       end
-
+      resource :sharepages, only: [] do
+        put :invite_to_others
+        delete :remove_invite
+      end
       resources :blocks, only: %i[index create show update destroy]
       resources :pages, only: %i[create index show update destroy] do
         post :save_data
