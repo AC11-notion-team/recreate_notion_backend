@@ -4,8 +4,6 @@ class Api::V1::AuthenticationController < ApplicationController
   def third_party_login
     if @user = User.find_by_email(params[:email])
       create_token
-      
-
     else
       create_third_party_user
       if @user.save
@@ -20,12 +18,7 @@ class Api::V1::AuthenticationController < ApplicationController
   private
 
   def create_third_party_user
-    p params
-    @user = User.new(username: params[:authentication][:name], 
-      email: params[:authentication][:email],
-      password: params[:authentication][:email], 
-      third_party: true,
-      image: params[:authentication][:image])
-  
+    @user = User.new(username: params[:authentication][:name], email: params[:authentication][:email],
+                     password: params[:authentication][:email], third_party: true)
   end
 end

@@ -10,7 +10,11 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
+<<<<<<< HEAD
 ActiveRecord::Schema.define(version: 2022_09_15_053128) do
+=======
+ActiveRecord::Schema.define(version: 2022_09_17_043727) do
+>>>>>>> 5b3e989aba80656a815fb822f88536edc937eca3
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "pgcrypto"
@@ -39,7 +43,6 @@ ActiveRecord::Schema.define(version: 2022_09_15_053128) do
     t.string "url"
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
-    t.integer "user_id"
     t.string "title", default: "Untitled"
     t.string "tail"
     t.datetime "deleted_at"
@@ -52,6 +55,9 @@ ActiveRecord::Schema.define(version: 2022_09_15_053128) do
     t.bigint "user_id", null: false
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
+    t.datetime "deleted_at"
+    t.boolean "editable"
+    t.index ["deleted_at"], name: "index_sharepages_on_deleted_at"
     t.index ["page_id"], name: "index_sharepages_on_page_id"
     t.index ["user_id"], name: "index_sharepages_on_user_id"
   end
