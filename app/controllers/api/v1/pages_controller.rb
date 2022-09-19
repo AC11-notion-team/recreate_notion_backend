@@ -9,12 +9,13 @@ class Api::V1::PagesController < ApplicationController
   end
 
   def create
-    @page = @current_user.pages.create(
+    page = Page.create(
       "icon": params[:icon],
       "cover": params[:cover]
     )
-    if @page.save
-      render json: @page
+    if page.save
+      Sharepage.create!(user_id: @current_user.id, page_id: page.id, editable: :ture)
+      render json: page
     else
       render json: { message: "cann't save the page" }
     end
@@ -32,7 +33,8 @@ class Api::V1::PagesController < ApplicationController
 
   def show
     @page = Page.find(params[:id])
-    @blocks = Page.print_all_blocks(@page[:tail]) if @page.blocks != []
+    render status: 404 if !@page.users.include?(@current_user) && @page.editable.nil?
+    @blocks = @page.blocks != [] ? Page.print_all_blocks(@page[:tail]) : []
   end
 
   def show_page_info
@@ -67,6 +69,8 @@ class Api::V1::PagesController < ApplicationController
     @page.update(
       "tail": prev_blockID
     )
+
+    ActionCable.server.broadcast("page_#{@page.id}", { page: @page })
   end
 
   def editable
@@ -90,8 +94,10 @@ class Api::V1::PagesController < ApplicationController
   end
 
   def delete_page
-    @page = Page.find_by(id: params[:page_id])
-    @page.destroy
+    page = Page.find_by(id: params[:page_id])
+    # sp = Sharepage.find_by(page_id: page.id)
+    # sp.destroy
+    page.destroy
   end
 
   private
