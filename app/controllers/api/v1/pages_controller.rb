@@ -66,6 +66,8 @@ class Api::V1::PagesController < ApplicationController
     @page.update(
       "tail": prev_blockID
     )
+
+    ActionCable.server.broadcast("page_#{@page.id}", { page: @page })
   end
 
   def editable
@@ -90,8 +92,8 @@ class Api::V1::PagesController < ApplicationController
 
   def delete_page
     page = Page.find_by(id: params[:page_id])
-    sp = Sharepage.find_by(page_id: page.id)
-    sp.destroy
+    # sp = Sharepage.find_by(page_id: page.id)
+    # sp.destroy
     page.destroy
   end
 
