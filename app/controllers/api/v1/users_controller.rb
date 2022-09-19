@@ -64,9 +64,10 @@ class Api::V1::UsersController < ApplicationController
     if @user
       create_token_for(@user)
     else
-      user = build_third_party_user_with(params[:authentication])
-      if user.save
-        user.pages.create!
+      @user = build_third_party_user_with(params)
+
+      if @user.save
+        @user.pages.create!
         create_token_for(@user)
       else
         render json: { message: 'wrong key' }
@@ -94,20 +95,19 @@ class Api::V1::UsersController < ApplicationController
     page = Page.find(params[:page_id])
     unless params[:search].empty?
       @users = User.where('email like ?', "%#{params[:search]}%")
-      # p '-' * 50
-      # @users.map do |user|
-      #   p '<' * 50
-      #   p user
-      #   p '*' * 50
-      #   p page.users.include?(user)
-      # end
-      # p '-' * 50
-      # p page.users
-      # p '-' * 50
-
       @Users = @users.select { |user| p !page.users.include?(user) }
       @Users
     end
+  end
+
+  def trash_page
+    @trans_pages = @current_user.pages.only_deleted.order('deleted_at ASC')
+  end
+
+  def restore_page
+    id = params[:restorePageId]
+    restore_page=Page.find(id) if @current_user.pages.restore(id, :recursive => true)
+    render json: restore_page
   end
 
   private
@@ -124,7 +124,7 @@ class Api::V1::UsersController < ApplicationController
     User.new(
       username: data[:name],
       email: data[:email],
-      assword: data[:email],
+      password: data[:email], 
       third_party: true
     )
   end
