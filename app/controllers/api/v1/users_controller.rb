@@ -3,21 +3,27 @@ class Api::V1::UsersController < ApplicationController
   before_action :find_user, only: %i[show login email_present email_confirmed third_party_login]
 
   def email_present
-    render json: {
-      status: 'register',
-      message: 'new user need create!'
-    } and return if @user.nil?
-    
-    render json: {
-      status: 'third',
-      message: 'user already exists, please press google account bottom'
-    } and return if @user[:third_party]
-      
-    render json: {
-    status: 'login',
-    message: 'user already exists, password, please!'
-    } and return if @user.email_confirmed
-    
+    if @user.nil?
+      render json: {
+        status: 'register',
+        message: 'new user need create!'
+      } and return
+    end
+
+    if @user[:third_party]
+      render json: {
+        status: 'third',
+        message: 'user already exists, please press google account bottom'
+      } and return
+    end
+
+    if @user.email_confirmed
+      render json: {
+        status: 'login',
+        message: 'user already exists, password, please!'
+      } and return
+    end
+
     if @user.email_confirmed.nil?
       UserMailer.registration_confirmation(@user).deliver_now
       render json: { status: 'unvertify' }
@@ -27,19 +33,19 @@ class Api::V1::UsersController < ApplicationController
   def create
     user = User.create!(user_params)
     UserMailer.registration_confirmation(user).deliver_now
-    render json: { 
+    render json: {
       status: 'unvertify',
-      message: 'Please confirm your email address to continue' 
+      message: 'Please confirm your email address to continue'
     }
   end
 
   def email_confirmed
     if params[:confirm_token] == @user[:confirm_token]
       @user.email_activate
-      render json: { 
-        status: 'login', 
+      render json: {
+        status: 'login',
         message: 'Welcome to the Zettel! Your email has been confirmed.',
-        user_id: @user.id 
+        user_id: @user.id
       }
     else
       render json: { status: 'unvertify', message: 'Sorry. User does not exist' }
@@ -71,6 +77,10 @@ class Api::V1::UsersController < ApplicationController
   def show
     user = User.find_by(email: params[:email])
     @pages = @current_user.pages.order('created_at ASC')
+    @pages = @pages.map do |page|
+      page.shareuser = page.users.select { |user| user != @current_user }
+      page
+    end
   end
 
   def update
@@ -80,9 +90,23 @@ class Api::V1::UsersController < ApplicationController
     end
   end
 
-  def search_user 
-    if !params[:search].empty?
-      @users = User.where("email like ?", "%#{params[:search]}%")
+  def search_user
+    page = Page.find(params[:page_id])
+    unless params[:search].empty?
+      @users = User.where('email like ?', "%#{params[:search]}%")
+      # p '-' * 50
+      # @users.map do |user|
+      #   p '<' * 50
+      #   p user
+      #   p '*' * 50
+      #   p page.users.include?(user)
+      # end
+      # p '-' * 50
+      # p page.users
+      # p '-' * 50
+
+      @Users = @users.select { |user| p !page.users.include?(user) }
+      @Users
     end
   end
 
@@ -97,10 +121,10 @@ class Api::V1::UsersController < ApplicationController
   end
 
   def build_third_party_user_with(data)
-    User.new( 
-      username: data[:name], 
+    User.new(
+      username: data[:name],
       email: data[:email],
-      assword: data[:email], 
+      assword: data[:email],
       third_party: true
     )
   end

@@ -1,6 +1,6 @@
 class PageChannel < ApplicationCable::Channel
   def subscribed
-    page = Page.find(params[:id])
-    stream_for page
+    id = params['id']
+    stream_from "page_#{id}"
   end
 end

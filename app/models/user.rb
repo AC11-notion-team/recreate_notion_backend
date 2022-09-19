@@ -11,11 +11,9 @@ class User < ApplicationRecord
   validates :username, presence: true, uniqueness: true
   validates :password_digest, presence: true
 
-  # 關聯
-  has_many :pages
   # 關聯, 一個人可以參與很多page的編輯 - 多對多(user - sharepage(第三方) - page )
   has_many :sharepages
-  has_many :linkpages, through: :sharepages, source: :page
+  has_many :pages, through: :sharepages
 
   def email_activate
     update(email_confirmed: true, confirm_token: nil)
@@ -43,7 +41,7 @@ class User < ApplicationRecord
   end
 
   def add_template(data_block, page_title)
-    page = pages.create!(
+    page = Page.create!(
       title: page_title
     )
     prev_blockID = nil
@@ -52,7 +50,7 @@ class User < ApplicationRecord
         blockID: block[:id],
         kind: block[:type],
         data: block[:data],
-        prev_blockID: prev_blockID
+        prev_blockID:
       )
       prev_blockID = block[:id]
       init_block.save
@@ -60,6 +58,6 @@ class User < ApplicationRecord
     page.update(
       tail: prev_blockID
     )
+    Sharepage.create!(user_id: id, page_id: page.id)
   end
 end
-
