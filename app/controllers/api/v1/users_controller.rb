@@ -2,10 +2,6 @@ class Api::V1::UsersController < ApplicationController
   skip_before_action :authenticate_request, only: %i[email_present create email_confirmed login third_party_login]
   before_action :find_user, only: %i[show login email_present email_confirmed third_party_login]
 
-  def index
-    render json: User.all, status: :ok
-  end
-
   def email_present
     render json: {
       status: 'register',

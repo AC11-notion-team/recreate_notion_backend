@@ -2,7 +2,10 @@ class Api::V1::PagesController < ApplicationController
   before_action :authenticate_request
 
   def index
-    @pages = current_user.pages
+    p "index"
+    # @pages = current_user.pages
+    message()
+    render json: {"hi": "hello"}
   end
 
   def create
@@ -95,5 +98,11 @@ class Api::V1::PagesController < ApplicationController
 
   def page_params
     params.permit(:icon, :cover, :url)
+  end
+
+  def message
+    p "message called"
+    # PageChannel.broadcast_to('public_page', message: {text: 'sendback', data: { id: 'aaa' }})
+    ActionCable.server.broadcast("page_#{@page.id}", { page: @page })
   end
 end
