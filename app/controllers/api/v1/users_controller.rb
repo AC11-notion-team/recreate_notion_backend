@@ -95,20 +95,19 @@ class Api::V1::UsersController < ApplicationController
     page = Page.find(params[:page_id])
     unless params[:search].empty?
       @users = User.where('email like ?', "%#{params[:search]}%")
-      # p '-' * 50
-      # @users.map do |user|
-      #   p '<' * 50
-      #   p user
-      #   p '*' * 50
-      #   p page.users.include?(user)
-      # end
-      # p '-' * 50
-      # p page.users
-      # p '-' * 50
-
       @Users = @users.select { |user| p !page.users.include?(user) }
       @Users
     end
+  end
+
+  def trash_page
+    @trans_pages = @current_user.pages.only_deleted.order('deleted_at ASC')
+  end
+
+  def restore_page
+    id = params[:restorePageId]
+    restore_page=Page.find(id) if @current_user.pages.restore(id, :recursive => true)
+    render json: restore_page
   end
 
   private

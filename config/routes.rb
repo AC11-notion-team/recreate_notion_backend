@@ -8,7 +8,9 @@ Rails.application.routes.draw do
           post :login
           get :email_confirmed
           get :search_user
+          get :trash_page
           post :third_party_login
+          put :restore_page
         end
       end
       resource :sharepages, only: [] do
