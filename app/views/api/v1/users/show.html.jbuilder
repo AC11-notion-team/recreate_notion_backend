@@ -3,6 +3,7 @@ json.pages @pages do |page|
   json.title page.title
   json.icon  page.icon
   json.url page.url
+  json.favorite page.favorite
   json.shareuser page.shareuser do |user|
     json.user_id user.id
     json.username user.username
