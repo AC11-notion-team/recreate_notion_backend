@@ -2,10 +2,7 @@ class Api::V1::PagesController < ApplicationController
   before_action :authenticate_request
 
   def index
-    p "index"
-    # @pages = current_user.pages
-    message()
-    render json: {"hi": "hello"}
+    @pages = current_user.pages
   end
 
   def create
@@ -44,6 +41,7 @@ class Api::V1::PagesController < ApplicationController
   def save_data
     @page = Page.find_by(id: params[:page_id])
     block_data = params[:api][:blocks]
+    # ActionCable.server.broadcast("page_#{@page.id}", { blocks: block_data, user_id: @current_user.id })
     prev_blockID = nil
     block_data.map.with_index do |block, _index|
       @find_block = Block.where(blockID: block[:id])
@@ -69,8 +67,8 @@ class Api::V1::PagesController < ApplicationController
     @page.update(
       "tail": prev_blockID
     )
-
-    ActionCable.server.broadcast("page_#{@page.id}", { page: @page })
+    
+    
   end
 
   def editable
