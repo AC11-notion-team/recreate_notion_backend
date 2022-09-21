@@ -93,11 +93,11 @@ class Api::V1::PagesController < ApplicationController
 
   def delete_page
     page = Page.find_by(id: params[:page_id])
-    # sp = Sharepage.find_by(page_id: page.id)
-    # sp.destroy
     page.destroy
+    render json: page
   end
-
+  
+  
   private
 
   def page_params

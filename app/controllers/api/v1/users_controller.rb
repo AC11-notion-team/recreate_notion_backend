@@ -64,9 +64,10 @@ class Api::V1::UsersController < ApplicationController
     if @user
       create_token_for(@user)
     else
-      user = build_third_party_user_with(params[:authentication])
-      if user.save
-        user.pages.create!
+      @user = build_third_party_user_with(params)
+
+      if @user.save
+        @user.pages.create!
         create_token_for(@user)
       else
         render json: { message: 'wrong key' }
@@ -100,6 +101,16 @@ class Api::V1::UsersController < ApplicationController
     end
   end
 
+  def trash_page
+    @trans_pages = @current_user.pages.only_deleted.order('deleted_at ASC')
+  end
+
+  def restore_page
+    id = params[:restorePageId]
+    restore_page=Page.find(id) if @current_user.pages.restore(id, :recursive => true)
+    render json: restore_page
+  end
+
   private
 
   def user_params
@@ -114,7 +125,7 @@ class Api::V1::UsersController < ApplicationController
     User.new(
       username: data[:name],
       email: data[:email],
-      assword: data[:email],
+      password: data[:email], 
       third_party: true
     )
   end
