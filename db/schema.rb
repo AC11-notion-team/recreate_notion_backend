@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2022_09_14_121820) do
+ActiveRecord::Schema.define(version: 2022_09_17_043727) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "pgcrypto"
@@ -39,12 +39,23 @@ ActiveRecord::Schema.define(version: 2022_09_14_121820) do
     t.string "url"
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
-    t.integer "user_id"
     t.string "title", default: "Untitled"
     t.string "tail"
     t.datetime "deleted_at"
     t.boolean "editable"
     t.index ["deleted_at"], name: "index_pages_on_deleted_at"
+  end
+
+  create_table "sharepages", force: :cascade do |t|
+    t.uuid "page_id", null: false
+    t.bigint "user_id", null: false
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
+    t.datetime "deleted_at"
+    t.boolean "editable"
+    t.index ["deleted_at"], name: "index_sharepages_on_deleted_at"
+    t.index ["page_id"], name: "index_sharepages_on_page_id"
+    t.index ["user_id"], name: "index_sharepages_on_user_id"
   end
 
   create_table "users", force: :cascade do |t|
@@ -62,4 +73,6 @@ ActiveRecord::Schema.define(version: 2022_09_14_121820) do
     t.index ["deleted_at"], name: "index_users_on_deleted_at"
   end
 
+  add_foreign_key "sharepages", "pages"
+  add_foreign_key "sharepages", "users"
 end
