@@ -4,9 +4,10 @@ Rails.application.routes.draw do
       resources :users, only: %i[create show update] do
         collection do
           get :email_present
-          post :login
           get :email_confirmed
+          post :login
           post :third_party_login
+          get :search
         end
       end
 

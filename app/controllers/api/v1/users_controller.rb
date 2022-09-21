@@ -54,7 +54,7 @@ class Api::V1::UsersController < ApplicationController
     if @user.authenticate(params[:password])
       create_token_for(@user)
     else
-      render json: { "status": 'login', "message": 'password wrong' }
+      render json: { status: 'login', message: 'password wrong' }
     end
   end
 
@@ -62,7 +62,7 @@ class Api::V1::UsersController < ApplicationController
     if @user
       create_token_for(@user)
     else
-      user = build_third_party_user_with(params[:authentication])
+      user = build_third_party_user_with(params)
       if user.save
         user.pages.create!
         create_token_for(@user)
@@ -77,9 +77,15 @@ class Api::V1::UsersController < ApplicationController
     @pages = @current_user.pages.order('created_at ASC')
   end
 
+  def search
+    unless params[:search].empty?
+      @pages = @current_user.pages.where("title like?","%#{params[:search]}%")
+    end
+  end
+  
   def update
     unless @user.update(user_params)
-      render json: { "errors": @user.errors.full_message },
+      render json: { errors: @user.errors.full_message },
              status: :unprocessable_entity
     end
   end
