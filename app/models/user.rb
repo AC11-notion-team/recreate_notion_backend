@@ -26,11 +26,11 @@ class User < ApplicationRecord
   end
 
   def init_template
-    init_block_data = [{ id: '05Ac-bg8U8',
-                         'type': 'header', 'data': { 'text': '<b>開始使用Zettel</b>', 'level': 1 } },
-                       { 'id': '4_ssCOKw4Y', 'type': 'paragraph', 'data': { 'text': '選擇旁邊的<code class="inline-code"> “＋”</code>，你可以在這裡使用更多有趣的功能' } }, { 'id': 'VZQ1Cb0rlk', 'type': 'image', 'data': { 'file': { 'url': 'https://image-repo-zeltek.s3.ap-northeast-1.amazonaws.com/8856641178649' }, 'caption': '就像這樣～', 'withBorder': false, 'stretched': false, 'withBackground': false } }, { 'id': 'u4jZeOYkA6', 'type': 'paragraph', 'data': { 'text': '另外更可以透過拖動來調整段落順序' } }, { 'id': 'YJyQ7HP-9-', 'type': 'image', 'data': { 'file': { 'url': 'https://image-repo-zeltek.s3.ap-northeast-1.amazonaws.com/9690636103570' }, 'caption': '', 'withBorder': false, 'stretched': false, 'withBackground': false } }, { 'id': 'mbZUPy2YZI', 'type': 'paragraph', 'data': { 'text': '讓我們開始吧.....' } }]
-    page_title = '開始使用Zettel'
-    add_template(init_block_data, page_title)
+    init_block_data = [{ "id": '05Ac-bg8U8', "type": 'header', "data": { "text": '<b>Getting Started</b>', "level": 2 } },
+      { "id": 'YiCX7qEQ-P', "type": 'paragraph', "data": { "text": 'Here are the basics:' } }, { "id": 'RiH3nemgq2', "type": 'checklist', "data": { "items": [{ "text": 'Click anywhere and just start typing', "checked": false }] } }, { "id": '6QJEJxvRe2', "type": 'checklist', "data": { "items": [{ "text": 'Hit <code class="inline-code">Tab</code>&nbsp;to see all the types of content you can add - headers, videos, sub pages, etc.', "checked": false }] } }, { "id": 'mr0x9kQQDV', "type": 'image', "data": { "file": { "url": 'https://image-repo-zeltek.s3.ap-northeast-1.amazonaws.com/8364854192866' }, "caption": '', "withBorder": false, "stretched": false, "withBackground": false } }, { "id": 'WCzXT69C9C', "type": 'checklist', "data": { "items": [{ "text": 'Highlight any text, and use the menu that pops up to <b>style</b> <i>your</i> <u class="cdx-underline">writing</u> <mark class="cdx-marker">however you like.</mark>', "checked": false }] } }, { "id": 'J4m08hv3Ez', "type": 'image', "data": { "file": { "url": 'https://image-repo-zeltek.s3.ap-northeast-1.amazonaws.com/7653934063513' }, "caption": '', "withBorder": false, "stretched": false, "withBackground": false } }, { "id": '9UjYLDvsLq', "type": 'checklist', "data": { "items": [{ "text": 'See the&nbsp;<code class="inline-code">⋮⋮</code> to the left of this checkbox on hover? Click and drag to move this line', "checked": false }] } }, { "id": 'pEyK887ZFo', "type": 'image', "data": { "file": { "url": 'https://image-repo-zeltek.s3.ap-northeast-1.amazonaws.com/7080027440270' }, "caption": '', "withBorder": false, "stretched": false, "withBackground": false } }, { "id": 'ybrxSy6097', "type": 'checklist', "data": { "items": [{ "text": 'Click the <code class="inline-code">+ New Page</code> button at the bottom of your sidebar to add a new page', "checked": false }, { "text": 'Click <code class="inline-code">Templates</code> in your sidebar to get started with pre-built pages', "checked": false }] } }]
+    page_title = 'Welcome to Zettel'
+    page_icon = "📖"
+    add_template(init_block_data, page_title, page_icon)
   end
 
   def travel_template
@@ -40,9 +40,10 @@ class User < ApplicationRecord
     add_template(travel_block_data, page_title)
   end
 
-  def add_template(data_block, page_title)
+  def add_template(data_block, page_title, page_icon = nil)
     page = Page.create!(
-      title: page_title
+      title: page_title,
+      icon: page_icon
     )
     prev_blockID = nil
     data_block.map do |block|

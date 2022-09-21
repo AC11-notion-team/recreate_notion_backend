@@ -78,6 +78,7 @@ class Api::V1::UsersController < ApplicationController
   def show
     user = User.find_by(email: params[:email])
     @pages = @current_user.pages.order('created_at ASC')
+    p @pages
     @pages = @pages.map do |page|
       page.shareuser = page.users.select { |user| user != @current_user }
       page

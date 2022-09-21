@@ -41,6 +41,7 @@ class Api::V1::PagesController < ApplicationController
   def save_data
     @page = Page.find_by(id: params[:page_id])
     block_data = params[:api][:blocks]
+    # ActionCable.server.broadcast("page_#{@page.id}", { blocks: block_data, user_id: @current_user.id })
     prev_blockID = nil
     block_data.map.with_index do |block, _index|
       @find_block = Block.where(blockID: block[:id])
@@ -66,8 +67,8 @@ class Api::V1::PagesController < ApplicationController
     @page.update(
       "tail": prev_blockID
     )
-
-    ActionCable.server.broadcast("page_#{@page.id}", { page: @page })
+    
+    
   end
 
   def editable
@@ -101,5 +102,11 @@ class Api::V1::PagesController < ApplicationController
 
   def page_params
     params.permit(:icon, :cover, :url)
+  end
+
+  def message
+    p "message called"
+    # PageChannel.broadcast_to('public_page', message: {text: 'sendback', data: { id: 'aaa' }})
+    ActionCable.server.broadcast("page_#{@page.id}", { page: @page })
   end
 end
