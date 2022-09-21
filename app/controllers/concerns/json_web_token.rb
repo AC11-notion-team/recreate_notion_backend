@@ -19,6 +19,7 @@ module JsonWebToken
       status: 'success', message: 'Log in, successfully!',
       auth_token: token,
       user_id: user.username,
-      user_image: user.image }, status: :ok
+      user_image: user.image,
+      user_email: user.email }, status: :ok
   end
 end
