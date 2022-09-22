@@ -86,7 +86,7 @@ class Api::V1::UsersController < ApplicationController
 
   def search_page
     unless params[:search].empty?
-      @pages = @current_user.pages.where("title I like?","%#{params[:search]}%")
+      @pages = @current_user.pages.where("title Ilike?","%#{params[:search]}%")
     end
   end
   
