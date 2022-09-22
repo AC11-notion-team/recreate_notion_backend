@@ -56,7 +56,7 @@ class Api::V1::UsersController < ApplicationController
     if @user.authenticate(params[:password])
       create_token_for(@user)
     else
-      render json: { "status": 'login', "message": 'password wrong' }
+      render json: { status: 'login', message: 'password wrong' }
     end
   end
 
@@ -84,9 +84,15 @@ class Api::V1::UsersController < ApplicationController
     end
   end
 
+  def search_page
+    unless params[:search].empty?
+      @pages = @current_user.pages.where("title like?","%#{params[:search]}%")
+    end
+  end
+  
   def update
     unless @user.update(user_params)
-      render json: { "errors": @user.errors.full_message },
+      render json: { errors: @user.errors.full_message },
              status: :unprocessable_entity
     end
   end
