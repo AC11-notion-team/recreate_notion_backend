@@ -28,6 +28,16 @@ class Api::V1::PagesController < ApplicationController
     end
   end
 
+  def cover
+    @page = Page.find(params[:page_id])
+    if @page.update(cover: params[:coverUrl])
+      render json: { message: "#{@page.cover}" }
+    else
+      render json: { message: 'wrong' }
+
+    end
+  end
+
   def show
     @page = Page.find(params[:id])
     @user_auth = @page.users.include?(@current_user)
@@ -68,8 +78,6 @@ class Api::V1::PagesController < ApplicationController
     @page.update(
       "tail": prev_blockID
     )
-    
-    
   end
 
   def editable
@@ -97,8 +105,7 @@ class Api::V1::PagesController < ApplicationController
     page.destroy
     render json: page
   end
-  
-  
+
   private
 
   def page_params
@@ -106,7 +113,7 @@ class Api::V1::PagesController < ApplicationController
   end
 
   def message
-    p "message called"
+    p 'message called'
     # PageChannel.broadcast_to('public_page', message: {text: 'sendback', data: { id: 'aaa' }})
     ActionCable.server.broadcast("page_#{@page.id}", { page: @page })
   end
