@@ -68,9 +68,7 @@ ActiveRecord::Schema.define(version: 2022_09_17_043727) do
     t.string "password_digest"
     t.boolean "third_party"
     t.string "image"
-    t.datetime "deleted_at"
     t.boolean "vertify_status"
-    t.index ["deleted_at"], name: "index_users_on_deleted_at"
   end
 
   add_foreign_key "sharepages", "pages"
