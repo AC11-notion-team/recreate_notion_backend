@@ -4,6 +4,7 @@ json.cover @page.cover
 json.url @page.url
 json.tail @page.tail
 json.editable @page.editable
+json.user_auth @user_auth
 
 json.blocks @blocks do |block|
   json.id block.blockID

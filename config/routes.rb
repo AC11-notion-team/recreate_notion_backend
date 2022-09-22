@@ -10,7 +10,6 @@ Rails.application.routes.draw do
           get :search_page
           get :trash_page
           post :login
-          get :trash_page
           post :third_party_login
           put :restore_page
         end
