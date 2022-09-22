@@ -56,7 +56,7 @@ class Api::V1::UsersController < ApplicationController
     if @user.authenticate(params[:password])
       create_token_for(@user)
     else
-      render json: { "status": 'login', "message": 'password wrong' }
+      render json: { status: 'login', message: 'password wrong' }
     end
   end
 
@@ -78,16 +78,21 @@ class Api::V1::UsersController < ApplicationController
   def show
     user = User.find_by(email: params[:email])
     @pages = @current_user.pages.order('created_at ASC')
-    p @pages
     @pages = @pages.map do |page|
       page.shareuser = page.users.select { |user| user != @current_user }
       page
     end
   end
 
+  def search_page
+    unless params[:search].empty?
+      @pages = @current_user.pages.where("title like?","%#{params[:search]}%")
+    end
+  end
+  
   def update
     unless @user.update(user_params)
-      render json: { "errors": @user.errors.full_message },
+      render json: { errors: @user.errors.full_message },
              status: :unprocessable_entity
     end
   end

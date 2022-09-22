@@ -5,9 +5,11 @@ Rails.application.routes.draw do
       resources :users, only: %i[create show update] do
         collection do
           get :email_present
-          post :login
           get :email_confirmed
           get :search_user
+          get :search_page
+          get :trash_page
+          post :login
           get :trash_page
           post :third_party_login
           put :restore_page
