@@ -7,6 +7,7 @@ class Api::V1::SharepagesController < ApplicationController
       unless page.users.include?(user)
         Sharepage.create!(user_id: user.id, page_id: params[:currentPageId])
         add_share_user << user
+        SharepagesMailer.sharepage_link(user,page).deliver_now
       end
     end
     render json: add_share_user
