@@ -21,11 +21,11 @@ class Api::V1::PagesController < ApplicationController
   def update
     @page = Page.find(params[:id])
 
-    if params[:title]
-      @page.update(title: params[:title])
-    else
-      @page.update(icon: params[:icon])
-    end
+    @page.update(title: params[:title]) if params[:title]
+    @page.update(icon: params[:icon]) if params[:icon]
+    @page.update(favorite: params[:favorite]) if !params[:favorite].nil?
+    
+   
   end
 
   def cover
