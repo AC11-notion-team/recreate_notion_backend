@@ -1,4 +1,4 @@
-require "active_support/core_ext/integer/time"
+require 'active_support/core_ext/integer/time'
 
 Rails.application.configure do
   # Settings specified here will take precedence over those in config/application.rb.
@@ -31,9 +31,21 @@ Rails.application.configure do
   config.active_storage.service = :local
 
   # Don't care if the mailer can't send.
-  config.action_mailer.raise_delivery_errors = false
+  config.action_mailer.raise_delivery_errors = true
 
   config.action_mailer.perform_caching = false
+  config.action_mailer.delivery_method = :smtp
+  config.action_mailer.smtp_settings = {
+    address: ENV['ADDRESS'],
+    port: 587,
+    domain: ENV['DOMAIN'],
+    user_name: ENV['USERNAME'],
+    password: ENV['PASSWORD'],
+    authentication: 'plain',
+    enable_starttls_auto: true
+  }
+
+  ActionMailer::Base.delivery_method = :smtp
 
   # Print deprecation notices to the Rails logger.
   config.active_support.deprecation = :log
@@ -50,7 +62,6 @@ Rails.application.configure do
   # Highlight code that triggered database queries in logs.
   config.active_record.verbose_query_logs = true
 
-
   # Raises error for missing translations.
   # config.i18n.raise_on_missing_translations = true
 
@@ -62,5 +73,6 @@ Rails.application.configure do
   config.file_watcher = ActiveSupport::EventedFileUpdateChecker
 
   # Uncomment if you wish to allow Action Cable access from any origin.
-  # config.action_cable.disable_request_forgery_protection = true
+  config.action_cable.disable_request_forgery_protection = true
+  config.action_cable.url = "ws://#{ENV['DOMAIN']}/cable"
 end
