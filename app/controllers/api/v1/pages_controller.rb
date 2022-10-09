@@ -102,7 +102,10 @@ class Api::V1::PagesController < ApplicationController
 
   def delete_page
     page = Page.find_by(id: params[:page_id])
-    page.destroy
+    page.destroy if params[:delete] == "softDelete"
+
+    really_page = @current_user.pages.only_deleted.find_by(id: params[:page_id])
+    really_page.really_destroy! if params[:delete] == "reallyDelete!"
     render json: page
   end
 
