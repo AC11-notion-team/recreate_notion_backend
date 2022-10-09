@@ -5,7 +5,7 @@ class Page < ApplicationRecord
   # 關聯
   has_many :blocks
   # 關聯 - 多對多(user - sharepage(第三方) - page )
-  has_many :sharepages
+  has_many :sharepages, dependent: :destroy
   has_many :users, through: :sharepages
 
   # Linklist function
